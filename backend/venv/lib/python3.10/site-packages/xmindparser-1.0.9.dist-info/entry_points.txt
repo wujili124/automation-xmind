@@ -1,0 +1,3 @@
+[console_scripts]
+xmindparser = xmindparser.main:main
+

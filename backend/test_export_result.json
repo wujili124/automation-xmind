@@ -1,0 +1,1479 @@
+{
+  "smoke_test_suite": {
+    "metadata": {
+      "source_file": "uploaded_xmind_file.xmind",
+      "export_time": "2025-07-02T16:01:02.490341",
+      "selected_markers": [
+        "priority-3",
+        "priority-2",
+        "priority-1",
+        "flag-red"
+      ],
+      "total_cases": 61
+    },
+    "test_cases": [
+      {
+        "case_id": "SMOKE_001",
+        "title": "答题器参与课中不完成加油站验证",
+        "module": "展示规则",
+        "test_path": "学习报告 > 展示规则 > 答题器参与课中不完成加油站",
+        "priority": "P3",
+        "markers": [
+          "priority-3"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看讲次详情",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_002",
+        "title": "答题器参与课中完成加油站验证",
+        "module": "展示规则",
+        "test_path": "学习报告 > 展示规则 > 答题器参与课中完成加油站",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看讲次详情",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_003",
+        "title": "小屏参与课中不完成加油站验证",
+        "module": "展示规则",
+        "test_path": "学习报告 > 展示规则 > 小屏参与课中不完成加油站",
+        "priority": "P1",
+        "markers": [
+          "priority-1"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看讲次详情",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_004",
+        "title": "小屏参与课中完成加油站验证",
+        "module": "展示规则",
+        "test_path": "学习报告 > 展示规则 > 小屏参与课中完成加油站",
+        "priority": "P3",
+        "markers": [
+          "priority-3"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看讲次详情",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_005",
+        "title": "高光时刻新增排行榜验证",
+        "module": "高光时刻",
+        "test_path": "学习报告 > 高光时刻 > 高光时刻新增排行榜",
+        "priority": "P1",
+        "markers": [
+          "priority-1"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "白琼",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_006",
+        "title": "学生只有排行榜高光时刻验证",
+        "module": "高光时刻",
+        "test_path": "学习报告 > 高光时刻 > 学生只有排行榜高光时刻",
+        "priority": "P1",
+        "markers": [
+          "flag-red"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看高光时刻",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_007",
+        "title": "学生高光时刻图片 > 6张验证",
+        "module": "高光时刻",
+        "test_path": "学习报告 > 高光时刻 > 学生高光时刻图片 > 6张",
+        "priority": "P1",
+        "markers": [
+          "flag-red"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看高光时刻",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_008",
+        "title": "学生不存在任何高光时刻验证",
+        "module": "高光时刻",
+        "test_path": "学习报告 > 高光时刻 > 学生不存在任何高光时刻",
+        "priority": "P1",
+        "markers": [
+          "flag-red"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看高光时刻",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_009",
+        "title": "学生课堂练习排行第7验证",
+        "module": "高光时刻",
+        "test_path": "学习报告 > 高光时刻 > 学生课堂练习排行第7",
+        "priority": "P1",
+        "markers": [
+          "flag-red"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看高光时刻",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_010",
+        "title": "学生课堂练习排行第6验证",
+        "module": "高光时刻",
+        "test_path": "学习报告 > 高光时刻 > 学生课堂练习排行第6",
+        "priority": "P1",
+        "markers": [
+          "flag-red"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看高光时刻",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_011",
+        "title": "班级学生不足3人排行榜不展示验证",
+        "module": "高光时刻",
+        "test_path": "学习报告 > 高光时刻 > 班级学生不足3人排行榜不展示",
+        "priority": "P1",
+        "markers": [
+          "flag-red"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看高光时刻",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_012",
+        "title": "学生参与多次课堂练习取最好成绩验证",
+        "module": "高光时刻",
+        "test_path": "学习报告 > 高光时刻 > 学生参与多次课堂练习取最好成绩",
+        "priority": "P1",
+        "markers": [
+          "flag-red"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看高光时刻",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_013",
+        "title": "学生参与多次课堂练习成绩一样随机展示验证",
+        "module": "高光时刻",
+        "test_path": "学习报告 > 高光时刻 > 学生参与多次课堂练习成绩一样随机展示",
+        "priority": "P1",
+        "markers": [
+          "flag-red"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看高光时刻",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_014",
+        "title": "高光时刻滑动查看验证",
+        "module": "高光时刻",
+        "test_path": "学习报告 > 高光时刻 > 高光时刻滑动查看",
+        "priority": "P1",
+        "markers": [
+          "flag-red"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "左滑高光时刻",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 2,
+            "action": "右滑高光时刻",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_015",
+        "title": "参与全部互动验证",
+        "module": "课堂互动",
+        "test_path": "学习报告 > 课堂互动 > 参与全部互动",
+        "priority": "P1",
+        "markers": [
+          "priority-1"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看课堂互动",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_016",
+        "title": "学生未收到部分互动验证",
+        "module": "课堂互动",
+        "test_path": "学习报告 > 课堂互动 > 学生未收到部分互动",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看课堂互动",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_017",
+        "title": "学生收到不参与验证",
+        "module": "课堂互动",
+        "test_path": "学习报告 > 课堂互动 > 学生收到不参与",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看课堂互动",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_018",
+        "title": "某题全部学生不参与也计入分母验证",
+        "module": "课堂互动",
+        "test_path": "学习报告 > 课堂互动 > 某题全部学生不参与也计入分母",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看课堂互动",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_019",
+        "title": "大屏只发起答题互动并参与验证",
+        "module": "课堂互动",
+        "test_path": "学习报告 > 课堂互动 > 大屏只发起答题互动并参与",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看课堂互动",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_020",
+        "title": "大屏只发起非答题互动并参与验证",
+        "module": "课堂互动",
+        "test_path": "学习报告 > 课堂互动 > 大屏只发起非答题互动并参与",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看课堂互动",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_021",
+        "title": "全部参与全部答对验证",
+        "module": "答题情况",
+        "test_path": "学习报告 > 答题情况 > 全部参与全部答对",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "正常参与互动",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_022",
+        "title": "全部参与部分答对验证",
+        "module": "答题情况",
+        "test_path": "学习报告 > 答题情况 > 全部参与部分答对",
+        "priority": "P1",
+        "markers": [
+          "priority-1"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "正常参与互动",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_023",
+        "title": "全部参与全部答错验证",
+        "module": "答题情况",
+        "test_path": "学习报告 > 答题情况 > 全部参与全部答错",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "正常参与互动",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_024",
+        "title": "部分参与全部正确答题验证",
+        "module": "答题情况",
+        "test_path": "学习报告 > 答题情况 > 部分参与全部正确答题",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "正常参与互动",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_025",
+        "title": "部分参与部分正确答题验证",
+        "module": "答题情况",
+        "test_path": "学习报告 > 答题情况 > 部分参与部分正确答题",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "正常参与互动",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_026",
+        "title": "部分参与全部答错验证",
+        "module": "答题情况",
+        "test_path": "学习报告 > 答题情况 > 部分参与全部答错",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "正常参与互动",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_027",
+        "title": "答题详情新增未收到的答题验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 答题详情新增未收到的答题",
+        "priority": "P1",
+        "markers": [
+          "priority-1"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看学习报告答题详情",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 2,
+            "action": "点击收到的答题",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 3,
+            "action": "点击未收到的答题",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_028",
+        "title": "错题重做展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 错题重做展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "切换 收到的答题",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 2,
+            "action": "点击错题重做按钮",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 3,
+            "action": "点击显示答案",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 4,
+            "action": "点击隐藏答案",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_029",
+        "title": "不存在未收到题目时答题卡展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 不存在未收到题目时答题卡展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看学习报告答题详情",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_030",
+        "title": "预置选择题答对时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 预置选择题答对时题目详情展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击答对答题卡题目",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 2,
+            "action": "班级正确率校验",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 3,
+            "action": "点击 蒙层或 ∨",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_031",
+        "title": "预置选择题答错时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 预置选择题答错时题目详情展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击答错答题卡题目",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_032",
+        "title": "预置选择题未作答时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 预置选择题未作答时题目详情展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击未作答答题卡题目",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_033",
+        "title": "预置选择题未收到时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 预置选择题未收到时题目详情展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击未收到的答题卡题目",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_034",
+        "title": "预置轻选择题答对时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 预置轻选择题答对时题目详情展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击答对答题卡题目",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 2,
+            "action": "班级正确率校验",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 3,
+            "action": "点击 蒙层或 ∨",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_035",
+        "title": "预置轻选择题答错时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 预置轻选择题答错时题目详情展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击答错答题卡题目",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_036",
+        "title": "预置轻选择题未作答时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 预置轻选择题未作答时题目详情展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击未作答答题卡题目",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_037",
+        "title": "预置轻选择题未收到时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 预置轻选择题未收到时题目详情展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击未收到的答题卡题目",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_038",
+        "title": "预置主观题答对时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 预置主观题答对时题目详情展示",
+        "priority": "P1",
+        "markers": [
+          "priority-1"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击答对的答题卡题目",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 2,
+            "action": "班级正确率校验",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_039",
+        "title": "预置主观题答错时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 预置主观题答错时题目详情展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击答错的答题卡题目",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_040",
+        "title": "预置主观题未作答时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 预置主观题未作答时题目详情展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击未作答的答题卡题目",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_041",
+        "title": "预置主观题序号展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 预置主观题序号展示",
+        "priority": "P3",
+        "markers": [
+          "priority-3"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看答题卡展示",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_042",
+        "title": "预置主观题未收到时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 预置主观题未收到时题目详情展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击未收到的答题卡题目",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_043",
+        "title": "非预置课堂练习答对时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 非预置课堂练习答对时题目详情展示",
+        "priority": "P1",
+        "markers": [
+          "priority-1"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击答对的答题卡题目",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 2,
+            "action": "班级正确率校验",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_044",
+        "title": "非预置课堂练习答错时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 非预置课堂练习答错时题目详情展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击答错的答题卡题目",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_045",
+        "title": "非预置课堂练习半对时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 非预置课堂练习半对时题目详情展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击半对的答题卡题目",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_046",
+        "title": "非预置课堂练习未作答时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 非预置课堂练习未作答时题目详情展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击未作答的答题卡题目",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_047",
+        "title": "非预置课堂练习未收到时题目详情展示验证",
+        "module": "答题详情",
+        "test_path": "学习报告 > 答题详情 > 非预置课堂练习未收到时题目详情展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "点击未收到的答题卡题目",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_048",
+        "title": "学生全程不考勤学习报告展示验证",
+        "module": "其他",
+        "test_path": "学习报告 > 其他 > 学生全程不考勤学习报告展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看学习报告",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_049",
+        "title": "学生全程不签到学习报告展示验证",
+        "module": "其他",
+        "test_path": "学习报告 > 其他 > 学生全程不签到学习报告展示",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看学习报告",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_050",
+        "title": "生成报告后又更新了学习数据验证",
+        "module": "其他",
+        "test_path": "学习报告 > 其他 > 生成报告后又更新了学习数据",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "ipad答对更新答错 app查看报告",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 2,
+            "action": "ipad更新已作答为未作答 微信查看报告",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 3,
+            "action": "ipad更新未作答为已作答 浏览器查看报告",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 4,
+            "action": "过了时间后ipad批改主观题",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_051",
+        "title": "讲次不存在答题互动验证",
+        "module": "其他",
+        "test_path": "学习报告 > 其他 > 讲次不存在答题互动",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看学习报告",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_052",
+        "title": "讲次没发起任何互动验证",
+        "module": "其他",
+        "test_path": "学习报告 > 其他 > 讲次没发起任何互动",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看学习报告",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_053",
+        "title": "当前学生未参与任何互动验证",
+        "module": "其他",
+        "test_path": "学习报告 > 其他 > 当前学生未参与任何互动",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看学习报告",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_054",
+        "title": "计入互动数全量互动回归验证",
+        "module": "其他",
+        "test_path": "学习报告 > 其他 > 计入互动数全量互动回归",
+        "priority": "P1",
+        "markers": [
+          "priority-1"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "结课后根据学生id、讲次id查看表数据",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 2,
+            "action": "查看课堂互动",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 3,
+            "action": "查看答题正确率",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_055",
+        "title": "分享微信好友验证",
+        "module": "分享",
+        "test_path": "学习报告 > 分享 > 分享微信好友",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "分享",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 2,
+            "action": "本人打开",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 3,
+            "action": "好友打开",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_056",
+        "title": "多次分享验证",
+        "module": "分享",
+        "test_path": "学习报告 > 分享 > 多次分享",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "好友再次分享",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 2,
+            "action": "好友再次打开原链接",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 3,
+            "action": "好友打开分享的链接",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 4,
+            "action": "好友的好友打开链接",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_057",
+        "title": "分享朋友圈验证",
+        "module": "分享",
+        "test_path": "学习报告 > 分享 > 分享朋友圈",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "分享",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 2,
+            "action": "本人打开链接",
+            "expected": "操作成功完成"
+          },
+          {
+            "step": 3,
+            "action": "好友打开链接",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_058",
+        "title": "浏览器打开链接验证",
+        "module": "分享",
+        "test_path": "学习报告 > 分享 > 浏览器打开链接",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "复制链接到浏览器打开",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_059",
+        "title": "学生不存在未收到的互动数据验证",
+        "module": "数据库表",
+        "test_path": "学习报告 > 数据库表 > 学生不存在未收到的互动数据",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看rti.classroom_interaction_record",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_060",
+        "title": "学生存在收到和未收到的互动数据验证",
+        "module": "数据库表",
+        "test_path": "学习报告 > 数据库表 > 学生存在收到和未收到的互动数据",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看rti.classroom_interaction_record",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      },
+      {
+        "case_id": "SMOKE_061",
+        "title": "学生只存在未收到的互动数据验证",
+        "module": "数据库表",
+        "test_path": "学习报告 > 数据库表 > 学生只存在未收到的互动数据",
+        "priority": "P2",
+        "markers": [
+          "priority-2"
+        ],
+        "steps": [
+          {
+            "step": 1,
+            "action": "查看rti.classroom_interaction_record",
+            "expected": "操作成功完成"
+          }
+        ],
+        "smoke_criteria": {
+          "is_core_function": false,
+          "affects_main_flow": false,
+          "execution_time": "< 2分钟"
+        }
+      }
+    ]
+  }
+}

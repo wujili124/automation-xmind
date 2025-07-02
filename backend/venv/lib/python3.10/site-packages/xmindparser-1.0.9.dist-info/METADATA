@@ -1,0 +1,66 @@
+Metadata-Version: 2.1
+Name: xmindparser
+Version: 1.0.9
+Summary: Convert xmind to programmable data types, support xmind pro and xmind zen file types.
+Home-page: https://github.com/tobyqin/xmindparser
+Author: Toby Qin
+Author-email: toby.qin@live.com
+License: UNKNOWN
+Keywords: xmind parser converter json xml
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Topic :: Software Development
+Classifier: Topic :: Utilities
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+License-File: LICENSE
+
+
+Documentation
+-------------
+xmindparser is a tool to help you convert xmind file to programmable data type, e.g. json, xml.
+
+Detail usage: https://github.com/tobyqin/xmindparser
+
+
+Change Log
+----------
+1.0.9
+
+- Support and test with Python 3.9
+
+1.0.8
+
+- Handle empty title name for xmind zen in some cases.
+
+1.0.6
+
+- Keep empty topic title as null but not "[Blank]"
+
+1.0.5
+
+- Support xmind zen file type.
+
+1.0.4
+
+- Support parse label feature.
+
+1.0.2
+
+- Rename config key names.
+
+1.0.1
+
+- Support parse xmind to xml file type.
+
+1.0.0
+
+- Support parse xmind to dict data type with Python.
+- Support parse xmind to json file type.
+

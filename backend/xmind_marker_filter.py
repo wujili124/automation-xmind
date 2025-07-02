@@ -192,7 +192,10 @@ class XMindMarkerFilter:
     def should_keep_xml_node(self, node, target_marker_ids: List[str]) -> bool:
         """
         判断XML节点是否应该保留
-        保留包含目标markerId的节点或包含有效子节点的父节点
+        新逻辑：
+        1. 如果节点本身包含目标标记，保留
+        2. 如果节点的祖先包含目标标记，保留（作为被标记节点的子节点）
+        3. 如果节点的后代包含目标标记，保留（作为路径节点）
         """
         # 检查当前节点是否包含目标标记
         for marker_id in target_marker_ids:
@@ -202,7 +205,16 @@ class XMindMarkerFilter:
                 logger.info(f"保留包含目标标记的XML节点: markerId={marker_id}")
                 return True
         
-        # 检查是否有子节点包含目标标记
+        # 检查祖先节点是否包含目标标记
+        for marker_id in target_marker_ids:
+            # 向上查找祖先节点是否有目标标记
+            xpath = f"ancestor::topic[.//marker-ref[@marker-id='{marker_id}']]"
+            ancestor_with_marker = node.xpath(xpath)
+            if ancestor_with_marker:
+                logger.info(f"保留被标记祖先节点的子节点")
+                return True
+        
+        # 检查是否有子节点包含目标标记（作为路径节点保留）
         for marker_id in target_marker_ids:
             xpath = f".//topic[.//marker-ref[@marker-id='{marker_id}']]"
             child_nodes_with_marker = node.xpath(xpath)
@@ -404,10 +416,13 @@ class XMindMarkerFilter:
         
         return filtered_sheet
     
-    def filter_json_topic(self, topic: Dict, target_marker_ids: List[str], stats: Dict, is_root: bool = False) -> Dict:
+    def filter_json_topic(self, topic: Dict, target_marker_ids: List[str], stats: Dict, is_root: bool = False, ancestor_has_marker: bool = False) -> Dict:
         """
         递归过滤JSON格式的主题节点
-        保留包含目标标记的节点，删除不包含目标标记的节点
+        新逻辑：
+        1. 如果节点本身包含目标标记，保留该节点及其所有子节点
+        2. 如果祖先节点包含目标标记，保留该节点（作为被标记节点的子节点）
+        3. 如果后代节点包含目标标记，保留该节点（作为路径节点）
         """
         if not topic:
             return None
@@ -422,13 +437,21 @@ class XMindMarkerFilter:
         
         if 'children' in topic and 'attached' in topic['children']:
             for child_topic in topic['children']['attached']:
-                filtered_child = self.filter_json_topic(child_topic, target_marker_ids, stats, is_root=False)
+                # 如果当前节点有标记或祖先有标记，传递给子节点
+                child_ancestor_has_marker = ancestor_has_marker or has_target_marker
+                filtered_child = self.filter_json_topic(child_topic, target_marker_ids, stats, is_root=False, ancestor_has_marker=child_ancestor_has_marker)
                 if filtered_child:
                     filtered_children.append(filtered_child)
                     has_valid_children = True
         
-        # 决策逻辑：保留包含目标标记的节点或有有效子节点的父节点
-        if has_target_marker or has_valid_children or is_root:
+        # 决策逻辑：
+        # 1. 根节点始终保留
+        # 2. 节点本身有目标标记 → 保留
+        # 3. 祖先节点有目标标记 → 保留（作为被标记节点的子节点）
+        # 4. 有包含目标标记的后代节点 → 保留（作为路径节点）
+        should_keep = is_root or has_target_marker or ancestor_has_marker or has_valid_children
+        
+        if should_keep:
             # 更新子主题
             if filtered_children:
                 filtered_topic['children'] = {'attached': filtered_children}
@@ -438,10 +461,12 @@ class XMindMarkerFilter:
             
             if has_target_marker and not is_root:
                 logger.info(f"保留包含目标标记的节点: {topic.get('title', 'untitled')}")
+            elif ancestor_has_marker and not is_root:
+                logger.info(f"保留被标记祖先节点的子节点: {topic.get('title', 'untitled')}")
             
             return filtered_topic
         else:
-            # 删除不包含目标标记且没有有效子节点的节点
+            # 删除不符合保留条件的节点
             stats['nodes_removed'] += 1
             logger.info(f"删除不包含目标标记的节点: {topic.get('title', 'untitled')}")
             return None
@@ -607,7 +632,10 @@ class XMindMarkerFilter:
     def should_keep_minidom_node(self, node, target_marker_ids: List[str]) -> bool:
         """
         判断minidom节点是否应该保留
-        保留包含目标markerId的节点或包含有效子节点的父节点
+        新逻辑：
+        1. 如果节点本身包含目标标记，保留
+        2. 如果节点的祖先包含目标标记，保留（作为被标记节点的子节点）
+        3. 如果节点的后代包含目标标记，保留（作为路径节点）
         """
         # 检查当前节点是否包含目标标记
         for marker_id in target_marker_ids:
@@ -615,7 +643,16 @@ class XMindMarkerFilter:
                 logger.info(f"保留包含目标标记的XML节点（minidom）: markerId={marker_id}")
                 return True
         
-        # 检查是否有子节点包含目标标记
+        # 检查祖先节点是否包含目标标记
+        current = node.parentNode
+        while current and current.nodeType == current.ELEMENT_NODE and current.tagName == 'topic':
+            for marker_id in target_marker_ids:
+                if self.has_target_marker(current, marker_id):
+                    logger.info(f"保留被标记祖先节点的子节点（minidom）")
+                    return True
+            current = current.parentNode
+        
+        # 检查是否有子节点包含目标标记（作为路径节点保留）
         child_topics = node.getElementsByTagName('topic')
         for i in range(child_topics.length):
             child_topic = child_topics[i]

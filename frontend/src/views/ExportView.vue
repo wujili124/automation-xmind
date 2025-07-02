@@ -83,9 +83,9 @@
                     <el-icon><Document /></el-icon>
                     导出Excel
                   </el-button>
-                  <el-button @click="copyTable" type="default" size="small">
-                    <el-icon><CopyDocument /></el-icon>
-                    复制表格
+                  <el-button @click="exportXMind" type="primary" size="small">
+                    <el-icon><FolderOpened /></el-icon>
+                    导出XMind
                   </el-button>
                 </div>
 
@@ -220,9 +220,10 @@
 import { ref, onMounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { ArrowLeft, CopyDocument, Download, Document } from "@element-plus/icons-vue";
+import { ArrowLeft, CopyDocument, Download, Document, FolderOpened } from "@element-plus/icons-vue";
 import axios from "axios";
 import * as XLSX from "xlsx";
+import JSZip from "jszip";
 
 interface MarkerInfo {
   markerId: string;
@@ -520,9 +521,378 @@ const exportExcel = () => {
   }
 };
 
-const copyTable = () => {
-  // Implementation for copying the table
-  console.log("Copying table");
+const exportXMind = async () => {
+  if (!exportResult.value || !testCasesTableData.value.length) {
+    ElMessage.error("没有可导出的测试用例数据");
+    return;
+  }
+
+  try {
+    // 创建ZIP实例
+    const zip = new JSZip();
+
+    // 准备测试用例数据，按模块分组
+    const groupedTestCases = testCasesTableData.value.reduce((acc: any, testCase) => {
+      const module = testCase.module || "其他模块";
+      if (!acc[module]) {
+        acc[module] = [];
+      }
+      acc[module].push(testCase);
+      return acc;
+    }, {});
+
+    // 生成XMind的content.xml内容
+    const contentXML = generateContentXML(groupedTestCases);
+    
+    // 生成meta.xml
+    const metaXML = generateMetaXML();
+    
+    // 生成manifest.xml
+    const manifestXML = generateManifestXML();
+    
+    // 生成styles.xml
+    const stylesXML = generateStylesXML();
+
+    // 添加文件到ZIP
+    zip.file("content.xml", contentXML);
+    zip.file("meta.xml", metaXML);
+    zip.file("styles.xml", stylesXML);
+    
+    // 创建META-INF目录并添加manifest.xml
+    zip.folder("META-INF")?.file("manifest.xml", manifestXML);
+
+    // 生成ZIP文件
+    const content = await zip.generateAsync({ type: "blob" });
+    
+    // 创建下载链接
+    const url = URL.createObjectURL(content);
+    const a = document.createElement("a");
+    a.href = url;
+    
+    // 生成文件名
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
+    a.download = `冒烟测试用例_${timestamp}.xmind`;
+    
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    ElMessage.success("XMind文件导出成功！");
+  } catch (error) {
+    console.error("XMind导出失败:", error);
+    ElMessage.error("XMind导出失败，请重试");
+  }
+};
+
+// 生成XMind content.xml
+const generateContentXML = (groupedTestCases: any) => {
+  const rootId = generateId();
+  const sheetId = generateId();
+  
+  let topicsXML = "";
+  let topicIndex = 0;
+  
+  // 为每个模块生成子主题
+  for (const [moduleName, testCases] of Object.entries(groupedTestCases)) {
+    const moduleId = generateId();
+    topicIndex++;
+    
+    let testCaseTopicsXML = "";
+    let caseIndex = 0;
+    
+    // 为每个测试用例生成子主题
+    (testCases as any[]).forEach(testCase => {
+      const caseId = generateId();
+      caseIndex++;
+      
+      // 根据优先级确定样式
+      const priorityStyle = getPriorityStyle(testCase.priority);
+      
+      // 生成测试步骤子主题
+      let stepsXML = "";
+      if (testCase.steps && testCase.steps.length > 0) {
+        testCase.steps.forEach((step: any, stepIndex: number) => {
+          const stepId = generateId();
+          const expectedId = generateId();
+          stepsXML += `
+            <topic id="${stepId}" style-id="step-style" position="${stepIndex % 2 === 0 ? 'right' : 'left'}">
+              <title>🔹 步骤${step.step}: ${escapeXML(step.action)}</title>
+              <children>
+                <topics type="attached">
+                  <topic id="${expectedId}" style-id="expected-style" position="right">
+                    <title>✅ 预期: ${escapeXML(step.expected)}</title>
+                  </topic>
+                </topics>
+              </children>
+            </topic>`;
+        });
+      }
+      
+      const hasSteps = stepsXML.length > 0;
+      
+      testCaseTopicsXML += `
+        <topic id="${caseId}" style-id="${priorityStyle}" position="${caseIndex % 2 === 0 ? 'right' : 'left'}">
+          <title>📋 ${escapeXML(testCase.title)}</title>
+          <notes>
+            <plain>优先级: ${testCase.priority}
+ID: ${testCase.case_id}
+模块: ${testCase.module}
+步骤数: ${testCase.steps_count}</plain>
+          </notes>
+          ${hasSteps ? `
+          <children>
+            <topics type="attached">
+              ${stepsXML}
+            </topics>
+          </children>` : ''}
+          <marker-refs>
+            <marker-ref marker-id="priority-${testCase.priority.toLowerCase()}"/>
+          </marker-refs>
+        </topic>`;
+    });
+    
+    topicsXML += `
+      <topic id="${moduleId}" style-id="module-style" position="${topicIndex % 2 === 0 ? 'right' : 'left'}">
+        <title>📁 ${escapeXML(moduleName)}</title>
+        <notes>
+          <plain>包含 ${(testCases as any[]).length} 个测试用例</plain>
+        </notes>
+        <children>
+          <topics type="attached">
+            ${testCaseTopicsXML}
+          </topics>
+        </children>
+      </topic>`;
+  }
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<xmap-content xmlns="urn:xmind:xmap:xmlns:content:2.0" xmlns:fo="http://www.w3.org/1999/XSL/Format">
+  <sheet id="${sheetId}" theme="professional">
+    <topic id="${rootId}" style-id="root-style" structure-class="org.xmind.ui.map.unbalanced">
+      <title>🎯 冒烟测试用例汇总</title>
+      <notes>
+        <plain>导出时间: ${new Date().toLocaleString('zh-CN')}
+总计: ${Object.values(groupedTestCases).reduce((sum, cases) => sum + (cases as any[]).length, 0)} 个测试用例
+模块数: ${Object.keys(groupedTestCases).length} 个</plain>
+      </notes>
+      <children>
+        <topics type="attached">
+          ${topicsXML}
+        </topics>
+      </children>
+    </topic>
+  </sheet>
+</xmap-content>`;
+};
+
+// 根据优先级获取样式ID
+const getPriorityStyle = (priority: string): string => {
+  if (priority.includes('P1') || priority.includes('priority-1') || priority === 'important') {
+    return 'priority-high-style';
+  } else if (priority.includes('P2') || priority.includes('priority-2')) {
+    return 'priority-medium-style';
+  } else if (priority.includes('P3') || priority.includes('priority-3')) {
+    return 'priority-normal-style';
+  } else {
+    return 'priority-low-style';
+  }
+};
+
+// 生成meta.xml
+const generateMetaXML = () => {
+  const now = new Date().toISOString();
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<meta xmlns="urn:xmind:xmap:xmlns:meta:2.0" version="2.0">
+  <Author>
+    <Name>XMind冒烟测试用例导出工具</Name>
+  </Author>
+  <Create>
+    <Time>${now}</Time>
+  </Create>
+  <Creator>
+    <Name>XMind冒烟测试用例导出工具</Name>
+    <Version>1.0.0</Version>
+  </Creator>
+</meta>`;
+};
+
+// 生成manifest.xml
+const generateManifestXML = () => {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<manifest xmlns="urn:xmind:xmap:xmlns:manifest:1.0">
+  <file-entry full-path="content.xml" media-type="text/xml"/>
+  <file-entry full-path="META-INF/" media-type=""/>
+  <file-entry full-path="META-INF/manifest.xml" media-type="text/xml"/>
+  <file-entry full-path="meta.xml" media-type="text/xml"/>
+  <file-entry full-path="styles.xml" media-type="text/xml"/>
+</manifest>`;
+};
+
+// 生成styles.xml - 大幅优化样式
+const generateStylesXML = () => {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<xmap-styles xmlns="urn:xmind:xmap:xmlns:style:2.0">
+  <styles>
+    <!-- 根节点样式 -->
+    <style id="root-style" type="topic">
+      <topic-properties>
+        <background-color>#2E86AB</background-color>
+        <border-line-color>#1B5E7F</border-line-color>
+        <border-line-width>3pt</border-line-width>
+        <line-color>#2E86AB</line-color>
+        <line-width>3pt</line-width>
+        <shape-class>org.xmind.topicShape.roundedRect</shape-class>
+        <text-color>#FFFFFF</text-color>
+        <text-font-family>微软雅黑</text-font-family>
+        <text-font-size>18pt</text-font-size>
+        <text-font-weight>bold</text-font-weight>
+      </topic-properties>
+    </style>
+    
+    <!-- 模块节点样式 -->
+    <style id="module-style" type="topic">
+      <topic-properties>
+        <background-color>#A23B72</background-color>
+        <border-line-color>#7A2C54</border-line-color>
+        <border-line-width>2pt</border-line-width>
+        <line-color>#A23B72</line-color>
+        <line-width>2pt</line-width>
+        <shape-class>org.xmind.topicShape.roundedRect</shape-class>
+        <text-color>#FFFFFF</text-color>
+        <text-font-family>微软雅黑</text-font-family>
+        <text-font-size>14pt</text-font-size>
+        <text-font-weight>bold</text-font-weight>
+      </topic-properties>
+    </style>
+    
+    <!-- 高优先级测试用例样式 -->
+    <style id="priority-high-style" type="topic">
+      <topic-properties>
+        <background-color>#F18F01</background-color>
+        <border-line-color>#C87201</border-line-color>
+        <border-line-width>2pt</border-line-width>
+        <line-color>#F18F01</line-color>
+        <line-width>2pt</line-width>
+        <shape-class>org.xmind.topicShape.roundedRect</shape-class>
+        <text-color>#FFFFFF</text-color>
+        <text-font-family>微软雅黑</text-font-family>
+        <text-font-size>12pt</text-font-size>
+        <text-font-weight>bold</text-font-weight>
+      </topic-properties>
+    </style>
+    
+    <!-- 中优先级测试用例样式 -->
+    <style id="priority-medium-style" type="topic">
+      <topic-properties>
+        <background-color>#C73E1D</background-color>
+        <border-line-color>#9A2F16</border-line-color>
+        <border-line-width>2pt</border-line-width>
+        <line-color>#C73E1D</line-color>
+        <line-width>2pt</line-width>
+        <shape-class>org.xmind.topicShape.roundedRect</shape-class>
+        <text-color>#FFFFFF</text-color>
+        <text-font-family>微软雅黑</text-font-family>
+        <text-font-size>12pt</text-font-size>
+        <text-font-weight>normal</text-font-weight>
+      </topic-properties>
+    </style>
+    
+    <!-- 普通优先级测试用例样式 -->
+    <style id="priority-normal-style" type="topic">
+      <topic-properties>
+        <background-color>#3E92CC</background-color>
+        <border-line-color>#2E6FA3</border-line-color>
+        <border-line-width>2pt</border-line-width>
+        <line-color>#3E92CC</line-color>
+        <line-width>2pt</line-width>
+        <shape-class>org.xmind.topicShape.roundedRect</shape-class>
+        <text-color>#FFFFFF</text-color>
+        <text-font-family>微软雅黑</text-font-family>
+        <text-font-size>12pt</text-font-size>
+        <text-font-weight>normal</text-font-weight>
+      </topic-properties>
+    </style>
+    
+    <!-- 低优先级测试用例样式 -->
+    <style id="priority-low-style" type="topic">
+      <topic-properties>
+        <background-color>#7B68EE</background-color>
+        <border-line-color>#5A4FCF</border-line-color>
+        <border-line-width>2pt</border-line-width>
+        <line-color>#7B68EE</line-color>
+        <line-width>2pt</line-width>
+        <shape-class>org.xmind.topicShape.roundedRect</shape-class>
+        <text-color>#FFFFFF</text-color>
+        <text-font-family>微软雅黑</text-font-family>
+        <text-font-size>12pt</text-font-size>
+        <text-font-weight>normal</text-font-weight>
+      </topic-properties>
+    </style>
+    
+    <!-- 测试步骤样式 -->
+    <style id="step-style" type="topic">
+      <topic-properties>
+        <background-color>#90EE90</background-color>
+        <border-line-color>#6BC86B</border-line-color>
+        <border-line-width>1pt</border-line-width>
+        <line-color>#90EE90</line-color>
+        <line-width>1pt</line-width>
+        <shape-class>org.xmind.topicShape.ellipse</shape-class>
+        <text-color>#2F4F2F</text-color>
+        <text-font-family>微软雅黑</text-font-family>
+        <text-font-size>10pt</text-font-size>
+        <text-font-weight>normal</text-font-weight>
+      </topic-properties>
+    </style>
+    
+    <!-- 预期结果样式 -->
+    <style id="expected-style" type="topic">
+      <topic-properties>
+        <background-color>#FFE4E1</background-color>
+        <border-line-color>#DDD0CC</border-line-color>
+        <border-line-width>1pt</border-line-width>
+        <line-color>#FFE4E1</line-color>
+        <line-width>1pt</line-width>
+        <shape-class>org.xmind.topicShape.roundedRect</shape-class>
+        <text-color>#8B4513</text-color>
+        <text-font-family>微软雅黑</text-font-family>
+        <text-font-size>9pt</text-font-size>
+        <text-font-weight>normal</text-font-weight>
+      </topic-properties>
+    </style>
+    
+    <!-- 专业主题样式 -->
+    <style id="professional" type="theme">
+      <topic-properties>
+        <border-line-color>#2E86AB</border-line-color>
+        <border-line-width>2pt</border-line-width>
+        <line-color>#2E86AB</line-color>
+        <line-width>2pt</line-width>
+        <shape-class>org.xmind.topicShape.roundedRect</shape-class>
+        <text-color>#333333</text-color>
+        <text-font-family>微软雅黑</text-font-family>
+        <text-font-size>12pt</text-font-size>
+      </topic-properties>
+    </style>
+  </styles>
+</xmap-styles>`;
+};
+
+// 生成唯一ID
+const generateId = () => {
+  return Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+};
+
+// XML转义
+const escapeXML = (str: string) => {
+  if (!str) return "";
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 };
 
 const showTestCaseDetail = (testCase: any) => {

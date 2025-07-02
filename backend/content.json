@@ -1,0 +1,2234 @@
+[
+  {
+    "id": "5445dd4b-b55c-4688-9a41-b6e6ee31b8cb",
+    "class": "sheet",
+    "rootTopic": {
+      "id": "78f3iptjltv5rm3no3s44pe1s7",
+      "class": "topic",
+      "title": "学习报告",
+      "structureClass": "org.xmind.ui.logic.right",
+      "extensions": [
+        {
+          "provider": "org.xmind.ui.map.unbalanced",
+          "content": [
+            {
+              "name": "right-number",
+              "content": "-1"
+            }
+          ]
+        }
+      ],
+      "children": {
+        "attached": [
+          {
+            "id": "109up67cdpguo2ie78jg3c5mbo",
+            "title": "展示规则",
+            "children": {
+              "attached": [
+                {
+                  "id": "3t0mjojttg79d4bpmvlgd81v8d",
+                  "title": "答题器参与课中完成加油站",
+                  "notes": {
+                    "plain": {
+                      "content": "正常参与讲次互动，讲次已结课，学习报告脚本已执行完成"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "6tc0l13fmuof7elaubqfkedeap",
+                        "title": "查看讲次详情",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "7s1v4tnul663l2m54ahgun4k71",
+                              "title": "正常展示学习报告"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "5rp96rti83okrarh59k6fsmdab",
+                  "title": "小屏参与课中不完成加油站",
+                  "notes": {
+                    "plain": {
+                      "content": "正常参与讲次互动，讲次已结课，学习报告脚本已执行完成"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-1"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "33hidrdjb32t8e9bp0jfc65cjr",
+                        "title": "查看讲次详情",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "5ntvlomo8fcbdc4rh65goap035",
+                              "title": "正常展示学习报告"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "0e2q0edtt3jdlk4n1m2shsinaf",
+            "title": "高光时刻",
+            "children": {
+              "attached": [
+                {
+                  "id": "0r71p0l6l6r7qphadgqkbff42l",
+                  "title": "高光时刻新增排行榜",
+                  "notes": {
+                    "plain": {
+                      "content": "课中发起了课堂练习，考勤人数大于3人，当前学生参与并且排名第1；当前学生存在4种高光时刻"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-1"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "3gp89f02rh98154qb1h8f43epe",
+                        "title": "白琼",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "3ekvvltbni7k1na3cv7ibkovfh",
+                              "title": "正常展示高光时刻；\n轮播顺序：MVP>排行榜>表扬上墙>积分；轮播进度条正常展示\n排行榜展示 title-课堂练习排行榜、排名 1 2 3；学生 头像、姓名（当前学生放大展示，其他学生姓名只除第一个字外其他用*代替）、正确情况 答对数/全部、做题时长 分’秒"
+                            },
+                            {
+                              "id": "2b5a8307-2659-48c3-8380-ba67714ef28f",
+                              "title": "宋新远"
+                            },
+                            {
+                              "id": "acfe17bb-65b4-41af-b1ab-7e519c9054d1",
+                              "title": "王壮壮"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "662vuaq8qatnmr8rsot102ecdj",
+                  "title": "学生只有排行榜高光时刻",
+                  "notes": {
+                    "plain": {
+                      "content": "当前学生最优成绩排名第2"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "flag-red"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "651dcqqfedasqiiase33v70f8g",
+                        "title": "查看高光时刻",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "4pionrb022ddafmjq8655mrv1k",
+                              "title": "正常展示高光时刻，排行榜展示前3名"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "2dflrll2oq04s30r8ijjuh9p1s",
+                  "title": "学生高光时刻图片 > 6张",
+                  "notes": {
+                    "plain": {
+                      "content": "当前学生存在4种高光时刻"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "flag-red"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "7f1gacn8rqr8qiap7pco08tvt6",
+                        "title": "查看高光时刻",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "5cffgvgso4tdvcr2267c6e1fcl",
+                              "title": "正常展示高光时刻，展示优先级 MVP>排行榜>表扬上墙>积分，只轮询6张高光时刻图片"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "2pgk2cvp58qnveuhk79mf1cm5i",
+                  "title": "学生不存在任何高光时刻",
+                  "markers": [
+                    {
+                      "markerId": "flag-red"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "6snftkma1rk6kemrk5977slhm1",
+                        "title": "查看高光时刻",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "77ud8mbnkl0lepl9tdvf27lkgf",
+                              "title": "报告隐藏高光时刻模块"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "73rajlh7laf1g645p62ms2tqdd",
+                  "title": "学生课堂练习排行第7",
+                  "notes": {
+                    "plain": {
+                      "content": "学生存在MVP、表扬上墙、积分 高光时刻"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "flag-red"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "3iuhruigc4o7dr5cenmnl4di8h",
+                        "title": "查看高光时刻",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "2cqi4j05htlokq2vmmj0ckde1n",
+                              "title": "只展示 MVP、表扬上墙、积分高光时刻，轮询展示"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "43hi23ka6o9qnr59tgh0k8t8pd",
+                  "title": "学生课堂练习排行第6",
+                  "markers": [
+                    {
+                      "markerId": "flag-red"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "1pecupj00c4g69liaubdusscfk",
+                        "title": "查看高光时刻",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "2mhksfbktbccm5cs7t823la57o",
+                              "title": "正常展示高光时刻，排行榜展示5、6、7名"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "0i8cmgtts3i94hhev7r94asfp3",
+                  "title": "班级学生不足3人排行榜不展示",
+                  "notes": {
+                    "plain": {
+                      "content": "学生存在MVP、表扬上墙、积分 高光时刻"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "flag-red"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "03nrfbobhifguv1jbspce3g2kj",
+                        "title": "查看高光时刻",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "4k360d1k73328f72iu3o7r6d8g",
+                              "title": "只展示 MVP、表扬上墙、积分高光时刻，轮询展示"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "6mcf7016v1acf95sdpasl5n3sv",
+                  "title": "学生参与多次课堂练习取最好成绩",
+                  "notes": {
+                    "plain": {
+                      "content": "学生参与了2次课堂练习，分别排名 2、5名"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "flag-red"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "48ta2n10l9e5992bgur3m794b9",
+                        "title": "查看高光时刻",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "50ba6jg4qmi6s4p6p1mm2p9d45",
+                              "title": "排行榜高光时刻展示前3名，取排名第二的那次课堂练习互动数据"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "3auj2ad8d3bouheeldgv2jrlvr",
+                  "title": "学生参与多次课堂练习成绩一样随机展示",
+                  "notes": {
+                    "plain": {
+                      "content": "学生参与两次课堂练习，排名都是第3名"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "flag-red"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "41kb6d73l2oe44054t5q3hv7vh",
+                        "title": "查看高光时刻",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "7qk21o74qlbemoi0hoikh85jb6",
+                              "title": "排行榜高光时刻展示2、3、4名，随机取一个课堂练习互动数据"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "0kchk4225sco188d6cs2flo362",
+                  "title": "高光时刻滑动查看",
+                  "notes": {
+                    "plain": {
+                      "content": "高光时刻存在多张图片"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "flag-red"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "1eio9v4p1igm5upss44r60u7l4",
+                        "title": "左滑高光时刻",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "2pukl1jqokoi940pgjpgnlubdj",
+                              "title": "切换下一张图片，继续正常轮询"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "6sb3bm1nm0686gaiqr7pv5jb7d",
+                        "title": "右滑高光时刻",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "601rvo78iacgjgonktc5g0plkr",
+                              "title": "切换上一张图片，继续正常轮询"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "6f4qmm3akgi3hqfb7kt1m43k0q",
+            "title": "课堂互动",
+            "children": {
+              "attached": [
+                {
+                  "id": "5a9d5s1rg2o5lg2dtnq21t6dc6",
+                  "title": "参与全部互动",
+                  "notes": {
+                    "plain": {
+                      "content": "发起20个互动，包含答题互动(70%)、非答题互动（30%）"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-1"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "7eb07lvk4l1e2gstlntkn43ind",
+                        "title": "查看课堂互动",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "62cqn3u7gmh0pm82s2d52khqb3",
+                              "title": "互动参与度：100%，饼图展示：答题互动 14、其他互动 6"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "3q3uch2uds7jqt6c3urk49derp",
+                  "title": "学生未收到部分互动",
+                  "notes": {
+                    "plain": {
+                      "content": "当前学生开始不签到，发起1个题、6个非题，再把学生置为签到并参与互动，发起2个题，1个非题；"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "4cbm55fm9rlr8cjqnnt9e0asmg",
+                        "title": "查看课堂互动",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "056t6usff2tf70m0uk2ivfakkl",
+                              "title": "互动参与度：30%，饼图展示：答题互动 2、其他互动 1、未参与互动 7"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "4p7hhtgasortsv2a85f245sjn8",
+                  "title": "学生收到不参与",
+                  "notes": {
+                    "plain": {
+                      "content": "发起10个互动，当前学生只参与3个题，2个非题；"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "1dcdqon7mhotl3ltg4etfuqn6t",
+                        "title": "查看课堂互动",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "579thaob70mosc6ca3i0flpjtg",
+                              "title": "互动参与度：50%，饼图展示：答题互动 3、其他互动 2、未参与互动 5"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "0v491l8tahgc1vq3qminlr7n4n",
+                  "title": "某题全部学生不参与也计入分母",
+                  "notes": {
+                    "plain": {
+                      "content": "当讲一共发起10个答题互动，第1题都不参与，第一题之后正常参与"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "106dq94tis9hkpjpaaf3pcq9pj",
+                        "title": "查看课堂互动",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "0056k2q8ua264jc4uqpbkgr75r",
+                              "title": "互动参与度：90%，饼图展示：答题互动 9、未参与互动 1"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "5lctojrn66f4o6fqmvihpehlk6",
+                  "title": "大屏只发起答题互动并参与",
+                  "notes": {
+                    "plain": {
+                      "content": "发起10个答题互动"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "7fd0ko8mii7pv6bpk7gvf3sadh",
+                        "title": "查看课堂互动",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "72lu7f5f6pf2c11m8tqqcte131",
+                              "title": "互动参与度：100%，饼图展示：答题互动 10"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "2q63qj6c5jaaavt8o3m6huflqj",
+                  "title": "大屏只发起非答题互动并参与",
+                  "notes": {
+                    "plain": {
+                      "content": "发起10个非答题互动"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "206u3916gb2eks92sls8m6j502",
+                        "title": "查看课堂互动",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "0sef2eeomcm18tlhpqpt2487pa",
+                              "title": "互动参与度：100%，饼图展示：其他互动 10"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "4tqm4ebs6ugd934smjqggc6cpk",
+            "title": "答题情况",
+            "children": {
+              "attached": [
+                {
+                  "id": "0p2fmbvv82qa19adn39bgsq0ba",
+                  "title": "全部参与全部答对",
+                  "notes": {
+                    "plain": {
+                      "content": "讲次发起10道题，班级正确率100%"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "0e3aipvnk9a667pfmb657t46qk",
+                        "title": "正常参与互动",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "70unv6fuupg3l798a8nj6he5vh",
+                              "title": "答题正确率：100%；曲线图：我的正确率 100%  、班级均值 100%"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "3imbasdhfn34qfdj54ogaop16o",
+                  "title": "全部参与部分答对",
+                  "notes": {
+                    "plain": {
+                      "content": "讲次发起10道题（2主观‘每个2小题’、2选择、2轻选、2课堂练习），当前学生答对80%，一共3人，另外两人答对 50%"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-1"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "05m2iemqhiv1h88cl3jtllqa9h",
+                        "title": "正常参与互动",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "22k7okte0emasmddfj275fpsfq",
+                              "title": "答题正确率：80% ；曲线图：我的正确率 80% 、班级均值 60%"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "5j4j8opjmdl9e4t3md2hktmpvp",
+                  "title": "全部参与全部答错",
+                  "notes": {
+                    "plain": {
+                      "content": "讲次发起10道题，一共3人，另外两人全答对"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "3ck99mli3r2sb6fk1rvemtpqbb",
+                        "title": "正常参与互动",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "2d95r4bef8j00e5vkiqg0upkl7",
+                              "title": "答题正确率：0% ；曲线图：我的正确率 0% 、班级均值 67%"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "2rmsh3d5b08ri2q8cf1234mgmc",
+                  "title": "部分参与全部正确答题",
+                  "notes": {
+                    "plain": {
+                      "content": "一共两人，发起10道题，第3题发起后当前学生再出勤，另一学生正常开始就出勤并全部答对"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "3u38it8rja3qe0uavnc3murqdn",
+                        "title": "正常参与互动",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "787bqr35ma77pqp9kov2golmd7",
+                              "title": "答题正确率：100%；曲线图：我的正确率  100%、班级均值 100%"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "3v5muvvm4i8f9sgbb5pekc0mai",
+                  "title": "部分参与部分正确答题",
+                  "notes": {
+                    "plain": {
+                      "content": "一共两人，发起10道题，第2题发起后当前学生再出勤，答对4道题，另一学生正常开始就出勤并全部答对"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "5fdujdstoch65np5gokm60s4n4",
+                        "title": "正常参与互动",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "0pf4kj1ch0e6dd46qouk8usidg",
+                              "title": "答题正确率：50%；曲线图：我的正确率  50%、班级均值 78%"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "1660qvsoq43hiche4k2maami6u",
+                  "title": "部分参与全部答错",
+                  "notes": {
+                    "plain": {
+                      "content": "一共两人，发起10道题，第2题发起后当前学生再出勤，全答错，另一学生正常开始就出勤并全部答对"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "271mf75827std0k4101m609p37",
+                        "title": "正常参与互动",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "73cij6g7pq6vorfkdkit9f34b5",
+                              "title": "答题正确率：0% ；曲线图：我的正确率 0% 、班级均值 56%"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "5dt0f57rh47i7cevcuqvjrkl0i",
+            "title": "答题详情",
+            "children": {
+              "attached": [
+                {
+                  "id": "47nnjur402s85ln5siv7i0d7md",
+                  "title": "答题详情新增未收到的答题",
+                  "notes": {
+                    "plain": {
+                      "content": "当前讲次存在未收到的答题（未签到时发起的答题互动）"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-1"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "4onpbqnc57cclr96l3c7molmsm",
+                        "title": "查看学习报告答题详情",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "3ttd09h8dvm0qb18o2u09b3eai",
+                              "title": "新增 收到的答题、未收到的答题 tab"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "36ua5r7guph5euk0lu5pfc2vbr",
+                        "title": "点击收到的答题",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "69559p4pbjgdgbd5kievmdvep3",
+                              "title": "展示收到的答题互动作答情况，正确展示状态、题目序号"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "6phj0qa1pj0olliled8hcb4mbc",
+                        "title": "点击未收到的答题",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "591jp2iubdume5gs48klppb2eq",
+                              "title": "展示未收到的答题互动，颜色置灰展示、题目序号正确展示"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "7j25sa2fv13jhbr5j6pafv2gdd",
+                  "title": "错题重做展示",
+                  "notes": {
+                    "plain": {
+                      "content": "存在答错、半对的题目"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "6tdejikumhi57m8pfm7m11ucv3",
+                        "title": "切换 收到的答题",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "0a9kidq27e4nb2s9okefkkmhhc",
+                              "title": "展示收到的答题 情况"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "4o32k62c7jvbi5ugvqdsbvs4qo",
+                        "title": "点击错题重做按钮",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "766ie0mrjji4vs3ugi51sa0igg",
+                              "title": "进入错题重做页，展示全部半对、答错的题目卡片、每个卡片展示：题目序号、显示答案按钮、题干、选项"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "5lq5u057fe74oa3ektfpc6db2a",
+                        "title": "点击显示答案",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "112uhpde1jop0p2s67mjgolrha",
+                              "title": "题目卡片展示 答案和解析，显示答案 文案更新 隐藏答案"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "58oprsg9on1i5dbuhn8n99peud",
+                        "title": "点击隐藏答案",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "3bfpo9db34n7u7kemv9739uffv",
+                              "title": "题目卡片隐藏答案和解析， 隐藏答案 文案更新 显示答案"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "589pp207bd6pk8u9ih49ibgvjq",
+                  "title": "不存在未收到题目时答题卡展示",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "5s4knsts0fn76b1de0efb334ft",
+                        "title": "查看学习报告答题详情",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "0fhd5jej6pqpjb0vfdg6mriacr",
+                              "title": "不展示‘ 收到的答题、未收到的答题’tab"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "67tgo2hecebnsi8gl9l4hr9t6j",
+                  "title": "预置选择题答对时题目详情展示",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "6r8eug533u55jb8876f8br2laa",
+                        "title": "点击答对答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "6e3a38mbhl6q9v85gh333uisa6",
+                              "title": "抽屉形式展示，展示序号、我的答案、正确icon、班级正确率、发起互动时大屏截图"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "1m0ec043kkls5c8hlqoj486m85",
+                        "title": "班级正确率校验",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "2auqvrth1hev5959d6emn75k4u",
+                              "title": "（所有答题正确的人数）/（该题目的全部作答人数）*100%，向上取整"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "4oab2afnfvo8ss1too68r09t2l",
+                        "title": "点击 蒙层或 ∨",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "4vce23b2aco5lcruobd83b72q7",
+                              "title": "收起抽屉"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "2d8ss7j2u75s2821hgi5h0krli",
+                  "title": "预置选择题答错时题目详情展示",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "1mrutu9cq5ofkfjqpunggeqc89",
+                        "title": "点击答错答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "277ptc60u8lmdao472905sthjd",
+                              "title": "抽屉形式展示，展示序号、我的答案、错误icon、班级正确率、发起互动时大屏截图"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "3otla9uhopm0mejgoflsgguhp3",
+                  "title": "预置选择题未作答时题目详情展示",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "79vil7eadgucs6ea6n9e5kiv0p",
+                        "title": "点击未作答答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "21434orhqedsp5lj9q04l3t6vu",
+                              "title": "抽屉形式展示，展示序号、未作答icon、班级正确率、发起互动时大屏截图"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "0eupkm2pkl98l4sojmd7p3i20i",
+                  "title": "预置选择题未收到时题目详情展示",
+                  "notes": {
+                    "plain": {
+                      "content": "选中 未收到的答题 tab"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "4puq3s3itnlrgn81hc3j93pr1a",
+                        "title": "点击未收到的答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "067i8hrnpea3ld9ih02cqt50s0",
+                              "title": "抽屉形式展示，展示序号、班级正确率、发起互动时大屏截图"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "353a6euic9qcl2elnej13gb5ce",
+                  "title": "预置轻选择题答对时题目详情展示",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "6onssfbha1h4uu8iqout20b5r3",
+                        "title": "点击答对答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "3r4303a83l3qj3pkjibl8l82mq",
+                              "title": "抽屉形式展示，展示序号、我的答案、正确icon、班级正确率、发起互动时大屏截图"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "338ds8vjhkhtk8tea4bi1glnpn",
+                        "title": "班级正确率校验",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "0ijpjcik0a5boihd5pd6s15b37",
+                              "title": "（所有答题正确的人数）/（该题目的全部作答人数）*100%，向上取整"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "3kun8jgarojsgqoj4pfc6qb2db",
+                        "title": "点击 蒙层或 ∨",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "3nrtbh3qot0m4rlkv8bpvj8go7",
+                              "title": "收起抽屉"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "1uq8mek7jm4iq07ib3puc91rt4",
+                  "title": "预置轻选择题答错时题目详情展示",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "2icgg5g8d8c1l6er8eu5h4043g",
+                        "title": "点击答错答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "6h3iq7p6iu27h63gqieagv9rmv",
+                              "title": "抽屉形式展示，展示序号、我的答案、错误icon、班级正确率、发起互动时大屏截图"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "164jpk8i87dtgfn77sr8ksm9ok",
+                  "title": "预置轻选择题未作答时题目详情展示",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "70uqfqg5uo9j7jrol87ca3p4cm",
+                        "title": "点击未作答答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "0lnce1r89e55bciun0gilkmnts",
+                              "title": "抽屉形式展示，展示序号、未作答icon、班级正确率、发起互动时大屏截图"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "4r7mokfvtsidfjaq8ig5ip1mki",
+                  "title": "预置轻选择题未收到时题目详情展示",
+                  "notes": {
+                    "plain": {
+                      "content": "选中 未收到的答题 tab"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "55fjets0m553r7ibbploga8grr",
+                        "title": "点击未收到的答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "4b5j197mi93ge2ta2rvjncr0hi",
+                              "title": "抽屉形式展示，展示序号、班级正确率、发起互动时大屏截图"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "635m0nlsd1skmt2u6gn7oi3r8f",
+                  "title": "预置主观题答对时题目详情展示",
+                  "notes": {
+                    "plain": {
+                      "content": "答题时提交了1张图片"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-1"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "3bb8e0cvrvg7cqe3njj259ikt9",
+                        "title": "点击答对的答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "29654j4ecth6or84bo0vkr5k8c",
+                              "title": "抽屉形式展示，序号、我的答案（下图）、正确icon，班级正确率、提交的图片、题目信息、发起时大屏截图"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "35conbe6gqpn9lr5pmf7ibru8d",
+                        "title": "班级正确率校验",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "6ij94ms7knr7ai0k8p4tcp2qn9",
+                              "title": "（所有答题正确的人数）/（该题目的全部作答人数）*100%，向上取整"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "1a57qka44mdgn7v1eqiod04sc5",
+                  "title": "预置主观题答错时题目详情展示",
+                  "notes": {
+                    "plain": {
+                      "content": "答题时提交了3张图片"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "2no8ebgh5dfrci464ber3v058b",
+                        "title": "点击答错的答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "4otvgomlihbh1c2nu5g47fvkn7",
+                              "title": "抽屉形式展示，序号、我的答案（下图）、错误icon，班级正确率、提交的图片、题目信息、发起时大屏截图"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "6vir0ke6qh59h5c694if94g28q",
+                  "title": "预置主观题未作答时题目详情展示",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "6711ancvnlaadt8rirrhpasvoa",
+                        "title": "点击未作答的答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "7j38dek9ns7643t1i25arv8gmv",
+                              "title": "抽屉形式展示，序号、未作答icon，班级正确率、题目信息、发起时大屏截图"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "1jhl5p9fuicqgq3davttrhbbnv",
+                  "title": "预置主观题配置了图片题目详情展示",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "5om2uddk2flid2ahku06mt0pis",
+                        "title": "查看详情",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "4k7c2poh37f6n17chivor2c2ld",
+                              "title": "题目信息展示配置的图片"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "28af7csllpt0gsgnp7qmbjgouo",
+                  "title": "预置主观题未配置图片题目详情展示",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "3bf84pp173l3aqsd9a8i3tu0ca",
+                        "title": "查看详情",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "3bco713gnc0lfjul7qtuoulb64",
+                              "title": "题目信息展示发起互动时大屏截图"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "3javgbvestng1l602q2k1l2ei8",
+                  "title": "预置主观题未收到时题目详情展示",
+                  "notes": {
+                    "plain": {
+                      "content": "选中 未收到的答题 tab"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "2ml3smrp068011ba9j146qb766",
+                        "title": "点击未收到的答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "16gb3btidu0vqnl3qj9hjo7inc",
+                              "title": "抽屉形式展示，展示序号、班级正确率、发起互动时大屏截图"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "3m46mmb55agbesgni6fcol4ptf",
+                  "title": "非预置课堂练习答对时题目详情展示",
+                  "markers": [
+                    {
+                      "markerId": "priority-1"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "14k0ljv41c8tpbfdol4i68oik1",
+                        "title": "点击答对的答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "7o1153mgnilhoud3fjjmbrchps",
+                              "title": "抽屉形式展示，序号、我的答案、正确icon，班级正确率、题干、选项、答案、解析"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "4aqfeqp4trhf7ekr2g7fks2tnu",
+                        "title": "班级正确率校验",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "4qa19kd6ec2smqf7td3sutd94n",
+                              "title": "（所有答题正确的人数）/（该题目的全部作答人数）*100%，向上取整"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "48pdccpeh614otv5rvkjnd2v92",
+                  "title": "非预置课堂练习答错时题目详情展示",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "49bvddrotktm7koobtu21p6017",
+                        "title": "点击答错的答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "7oc1fe1vgej18saoeo153j0o6b",
+                              "title": "抽屉形式展示，序号、我的答案、错误icon，班级正确率、题干、选项、答案、解析"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "3uj166c5383fo4houo18884tsi",
+                  "title": "非预置课堂练习半对时题目详情展示",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "06e9n8ui8kd0kgcu8f8dg1dbvs",
+                        "title": "点击半对的答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "3rbpqfnel9kvhuhkkvogv25o1b",
+                              "title": "抽屉形式展示，序号、我的答案、半对icon，班级正确率、题干、选项、答案、解析"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "3ujvuqbabgi4pm2gkfr8r69sag",
+                  "title": "非预置课堂练习未作答时题目详情展示",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "5nltrvcv01ui5tlojkqc1tq59p",
+                        "title": "点击未作答的答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "4koevfsphin4ev4999r6ifbff9",
+                              "title": "抽屉形式展示，序号、未作答icon，班级正确率、题干、选项、答案、解析"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "3neqoktqehp7nvteujl7v68o6u",
+                  "title": "非预置课堂练习未收到时题目详情展示",
+                  "notes": {
+                    "plain": {
+                      "content": "选中 未收到的答题 tab"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "60l0btgu7tq9lncebjc9vrm5hm",
+                        "title": "点击未收到的答题卡题目",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "4e9o9j1o8er3e43ao7qtulngg4",
+                              "title": "抽屉形式展示，序号、班级正确率、题干、选项、答案、解析"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "06neflm4n9a1iel7727j9h8gv5",
+            "title": "其他",
+            "children": {
+              "attached": [
+                {
+                  "id": "4ni85u18ovqs9p1v3sfur7443u",
+                  "title": "学生全程不考勤学习报告展示",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "5ah0kj1i3atr45ne38e6uo61aa",
+                        "title": "查看学习报告",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "5ndpq44kon9pam938hhaehiflu",
+                              "title": "没有学习报告"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "7q57unh04p3ka6himqupgstnvi",
+                  "title": "学生全程不签到学习报告展示",
+                  "notes": {
+                    "plain": {
+                      "content": "已考勤"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "2iik6c1at9bppgksspglrrhhve",
+                        "title": "查看学习报告",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "0meu9hkoq5f947t7rim4f5mcsb",
+                              "title": "没有学习报告"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "2528nujr4g4qjdv8cjakof4hr1",
+                  "title": "生成报告后又更新了学习数据",
+                  "notes": {
+                    "plain": {
+                      "content": "只有主观题能更新，影响正确率、参与率\n7天后ipad不能批改（测试环境时间调整）"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "4umhdciggfjj0jrtm0mmdso69d",
+                        "title": "ipad答对更新答错 app查看报告",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "2a2rqe4gua7rbh0ttcl59t5bhg",
+                              "title": "学习报告实时更新数据"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "070kgo3a54sgd0hn8s9e9dc3bu",
+                        "title": "ipad更新已作答为未作答 微信查看报告",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "7p701e0riha975lmi707vk44km",
+                              "title": "学习报告实时更新数据"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "7vnvahdrmht7g715f7du6fdueq",
+                        "title": "ipad更新未作答为已作答 浏览器查看报告",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "19vad66trdafpfc415pgvuhd4n",
+                              "title": "学习报告实时更新数据"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "0pdu2dn5jln7jog6q9eg2c0el1",
+                        "title": "过了时间后ipad批改主观题",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "430ieb44d2nhasf4p6gmr0u146",
+                              "title": "不能批改"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "3d3e0imegp05duh2kv5cg05thj",
+                  "title": "讲次不存在答题互动",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "13odf82g22cbees7innf9sf8cm",
+                        "title": "查看学习报告",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "46k0pkeb65r1t92cqk4k7ofhc5",
+                              "title": "不展示 答题互动，答题情况、答题详情"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "32m3atf2j9l7ac03mf4nk9topc",
+                  "title": "讲次没发起任何互动",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "3jnu29gl40gipk5vf4afmc58f7",
+                        "title": "查看学习报告",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "0sgu9l7b486te3qsif52tgqsul",
+                              "title": "没有学习报告"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "4b564cg64filmu83kp4t3vbpkg",
+                  "title": "当前学生未参与任何互动",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "7uv3r1mp160smcks0vnragu4ba",
+                        "title": "查看学习报告",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "6udogrtijbnrmvq52dricpi96t",
+                              "title": "不展示 高光时刻，其他正常展示"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "37n7qoj3idscdk62mlhflljmbt",
+                  "title": "计入互动数全量互动回归",
+                  "notes": {
+                    "plain": {
+                      "content": "预置互动（15）：上课铃、选择题2（非PK、PK）、懂不懂、课间休息、可控倒计时、一站到底（10）、是非题、主观题2（非PK、PK）、轻选择题2（非PK、PK\n）、分组PK、闯关动画、均等红包、拼手气红包、倒计时红包、音量红包、音量计、倒计时、点名、下课、本讲目标、小节榜单\n非预置互动（9）：课堂练习(2小题)、投屏讲解、可控倒计时、分组PK榜、MVP、判题、发积分、减积分、发起选择题2（2种）、随机红包、均等红包、表扬上墙、现场点名、一站到底（10）、下课（2）\n全部正常参与互动、正确答题\n讲次只有1个学生签到"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-1"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "1dj3hcdof7a4houinhtq54j4lv",
+                        "title": "结课后根据学生id、讲次id查看表数据",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "2b1i2rbbrd7704qml4ia1774j5",
+                              "title": "41条记录"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "1fdqdunahf3ne1m6d3b5d1umur",
+                        "title": "查看课堂互动",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "5mch2vesli53ukk0ufv51dqdj2",
+                              "title": "100%、饼图：答题 8，其他 33"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "75ie8rvmugi2q0m9qjq51t1nb9",
+                        "title": "查看答题正确率",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "5o9m334ejt27oot2ga3r3iotpe",
+                              "title": "个人100%、整体100%"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "5gv770npsnudj6p7aandlja5js",
+                  "title": "答题器回归"
+                }
+              ]
+            }
+          },
+          {
+            "id": "7hllu98jql59q13067m07ah1i4",
+            "title": "分享",
+            "children": {
+              "attached": [
+                {
+                  "id": "3amr1j67okcctfst1sn2egtsl7",
+                  "title": "分享微信好友",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "40786ch1huihfdqo2p2dgt0c9k",
+                        "title": "分享",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "7v636ekk33q5at0im2iqaoinap",
+                              "title": "可以分享，正常展示消息"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "3g1kv3195ob4mifpujcvdih40a",
+                        "title": "本人打开",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "6cl4lg96457cjdhsa3o5ij4v98",
+                              "title": "正常查看"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "5n9flbm7iudvv27gh3l4s4n2l6",
+                        "title": "好友打开",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "49m4lfr2lcjk4s2rpo6h9shcuc",
+                              "title": "正常查看"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "3qlve8545golfc2tigribbk6gq",
+                  "title": "多次分享",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    },
+                    {
+                      "markerId": "symbol-wrong"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "12lkdf44uf3hlk6skfl3hdaevt",
+                        "title": "好友再次分享",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "3fkb7rdmngk5t5eda82ruef4f3",
+                              "title": "可以分享，正常展示消息"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "4pangk7958vs34fqunbaraelkb",
+                        "title": "好友再次打开原链接",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "4d3jcdadt0t26oe752kpvegsg9",
+                              "title": "正常查看"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "1bu4mgkdfkrbvovps62rcc6df7",
+                        "title": "好友打开分享的链接",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "7h8en7qbqc9v2hp12e5voivsjj",
+                              "title": "正常查看"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "6pteig68i8dschmj72v58j1h16",
+                        "title": "好友的好友打开链接",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "02iscuk71kg41ectbimelvqmmn",
+                              "title": "正常查看"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "2qgqeo36eurf1mfqj1dvs0suvj",
+                  "title": "分享朋友圈",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "6kcfle48t87dk6lqai9pdgmh65",
+                        "title": "分享",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "0ua6gg1pu4sj85nhoisotcmuvb",
+                              "title": "可以分享，正常展示消息"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "14ebsl59kv8gvd6cipnjkui1g5",
+                        "title": "本人打开链接",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "58sbgv57d6mvp2d9papeo02g3p",
+                              "title": "正常查看"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "id": "28eikrnt6tkbpmv6sre1gneai5",
+                        "title": "好友打开链接",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "725d2t97e0bifjmvgguso7iddd",
+                              "title": "正常查看"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "3n1lej58mqloq8upnbub6dl6b2",
+                  "title": "浏览器打开链接",
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "3ahdqmsotq31jiak8ldrlnotma",
+                        "title": "复制链接到浏览器打开",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "6ebg8g751v04ue1lf30cl307v9",
+                              "title": "正常查看"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "7lln2c5rok996eq3gclpceb8qf",
+            "title": "数据库表",
+            "children": {
+              "attached": [
+                {
+                  "id": "6ndi5nl8n3eqt6fjl8qqp9mfq1",
+                  "title": "学生不存在未收到的互动数据",
+                  "notes": {
+                    "plain": {
+                      "content": "学生正常参与了答题互动、非答题互动"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "3ed9nociahgadga4n4k3akd5u9",
+                        "title": "查看rti.classroom_interaction_record",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "1lj37p0hnkgtgn71knpohpdokc",
+                              "title": "正确记录数据"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "6q2md63njn6kmoo8am3c2o7n8i",
+                  "title": "学生存在收到和未收到的互动数据",
+                  "notes": {
+                    "plain": {
+                      "content": "收到的包含答题数据、非答题数据；未收到的也包含答题数据、非答题数据"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "76omak95d3rgtulq4kjrem8it2",
+                        "title": "查看rti.classroom_interaction_record",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "4nh67ijamp3nqjicu934q6o50d",
+                              "title": "正确记录收到的互动数据，不记录未收到的互动数据"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "5mnqj8o5bf23hn7akr08949kii",
+                  "title": "学生只存在未收到的互动数据",
+                  "notes": {
+                    "plain": {
+                      "content": "讲次发起的互动包含答题、非答题"
+                    }
+                  },
+                  "markers": [
+                    {
+                      "markerId": "priority-2"
+                    }
+                  ],
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "0k5ua6h3cgrar1625k3fqu0v1a",
+                        "title": "查看rti.classroom_interaction_record",
+                        "children": {
+                          "attached": [
+                            {
+                              "id": "1lpchkvl1iplm2cmk7o489923b",
+                              "title": "不记录该学生该讲次的数据"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "6noie2853t697kbnaq634k7ijk",
+            "title": "测试数据",
+            "children": {
+              "attached": [
+                {
+                  "id": "4g6s6qi4kvkge763j1eoad2n1r",
+                  "title": "全部预置互动",
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "384rle6i1ighjnev58v7dkejh2",
+                        "title": "上课铃、选择题2（非PK、PK）、懂不懂、课间休息、可控倒计时、一站到底、是非题、主观题2（非PK、PK）、轻选择题2（非PK、PK\n）、分组PK、闯关动画、均等红包、拼手气红包、倒计时红包、音量红包、音量计、倒计时、点名、下课、本讲目标、小节榜单"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "41441ivvdvbiitj0btlpnnofi2",
+                  "title": "非预置发起",
+                  "children": {
+                    "attached": [
+                      {
+                        "id": "4m9f0mmr9ggg4mq430b9eqkkki",
+                        "title": "课堂练习(2小题)、投屏讲解、可控倒计时、分组PK榜、MVP、判题、发积分、减积分、发起选择题2（2种）、随机红包、均等红包、表扬上墙、现场点名、一站到底、下课（2）"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "title": "画布 1",
+    "legend": {
+      "visibility": "hidden",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "theme": {
+      "subTopic": {
+        "id": "6f5fcd3d-cb1f-49b9-8f04-790194f7d642",
+        "properties": {
+          "fo:font-family": "Microsoft YaHei",
+          "line-width": "1pt",
+          "line-color": "#558ED5",
+          "border-line-color": "#558ED5",
+          "border-line-width": "3pt",
+          "line-class": "org.xmind.branchConnection.curve"
+        }
+      },
+      "summary": {
+        "id": "a9867f12-30f4-451d-9586-fe02702f507a",
+        "properties": {
+          "line-width": "5pt",
+          "line-color": "#C3D69B",
+          "shape-class": "org.xmind.summaryShape.square"
+        }
+      },
+      "boundary": {
+        "id": "d23a52d7-5097-4ff5-afc0-a16f437eb923",
+        "properties": {
+          "fo:font-family": "Microsoft YaHei",
+          "fo:font-size": "10pt",
+          "fo:font-style": "italic",
+          "fo:color": "#FFFFFF",
+          "svg:fill": "#C3D69B",
+          "svg:opacity": ".2",
+          "line-width": "3pt",
+          "line-color": "#77933C",
+          "line-pattern": "dot",
+          "shape-class": "org.xmind.boundaryShape.roundedRect"
+        }
+      },
+      "calloutTopic": {
+        "id": "d53577c0-e977-448e-94e3-8a7ebdeeb211",
+        "properties": {
+          "fo:font-family": "Microsoft YaHei",
+          "svg:fill": "#FBF09C",
+          "border-line-color": "#F1BD51",
+          "border-line-width": "2pt"
+        }
+      },
+      "centralTopic": {
+        "id": "49b0bf9c-6483-49dc-889b-68aadc12dac0",
+        "properties": {
+          "fo:font-family": "Microsoft YaHei",
+          "fo:color": "#376092",
+          "svg:fill": "#DCE6F2",
+          "line-width": "1pt",
+          "line-color": "#558ED5",
+          "border-line-color": "#558ED5",
+          "border-line-width": "5pt",
+          "shape-class": "org.xmind.topicShape.roundedRect",
+          "line-class": "org.xmind.branchConnection.curve"
+        }
+      },
+      "mainTopic": {
+        "id": "ad3989dc-4158-423d-94e7-88c5cf1ae8b1",
+        "properties": {
+          "fo:font-family": "Microsoft YaHei",
+          "fo:color": "#17375E",
+          "svg:fill": "#DCE6F2",
+          "line-width": "1pt",
+          "line-color": "#558ED5",
+          "border-line-color": "#558ED5",
+          "border-line-width": "2pt",
+          "shape-class": "org.xmind.topicShape.roundedRect",
+          "line-class": "org.xmind.branchConnection.curve"
+        }
+      },
+      "summaryTopic": {
+        "id": "2ac4bee1-2c44-4a54-8edc-5f4ed5109dba",
+        "properties": {
+          "fo:font-family": "Microsoft YaHei",
+          "fo:font-size": "10pt",
+          "fo:font-style": "italic",
+          "fo:color": "#FFFFFF",
+          "svg:fill": "#77933C",
+          "border-line-width": "0pt",
+          "shape-class": "org.xmind.topicShape.roundedRect",
+          "line-class": "org.xmind.branchConnection.curve"
+        }
+      },
+      "floatingTopic": {
+        "id": "f6716f1f-0ef8-4416-9114-e421eda0a715",
+        "properties": {
+          "fo:font-family": "Microsoft YaHei",
+          "fo:font-weight": "bold",
+          "fo:color": "#FFFFFF",
+          "svg:fill": "#558ED5",
+          "line-color": "#558ED5",
+          "border-line-width": "0pt"
+        }
+      },
+      "relationship": {
+        "id": "cca30191-aed1-476a-8d9b-571a39d7c5fc",
+        "properties": {
+          "fo:font-family": "Microsoft YaHei",
+          "fo:font-size": "10pt",
+          "fo:font-weight": "normal",
+          "fo:font-style": "italic",
+          "fo:color": "#595959",
+          "fo:text-decoration": "none",
+          "line-width": "3pt",
+          "line-color": "#77933C",
+          "line-pattern": "dash",
+          "arrow-end-class": "org.xmind.arrowShape.triangle"
+        }
+      },
+      "map": {
+        "id": "60173d15-a246-4a66-8f41-f047aec05090",
+        "properties": {
+          "svg:fill": "#FFFFFF",
+          "multi-line-colors": "none",
+          "line-tapered": "none"
+        }
+      }
+    }
+  }
+]

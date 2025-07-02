@@ -1,13 +1,23 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import List, Dict, Any
 import uvicorn
 import logging
 import base64
+import io
+import json
+import zipfile
+import shutil
+import tempfile
+import os
+from pathlib import Path
 
 from xmind_parser import XMindAnalyzer
 from smoke_case_builder import SmokeCaseBuilder
+from xmind_marker_filter import xmind_filter
+import xmindparser
 
 # 配置日志
 logging.basicConfig(level=logging.INFO)
@@ -37,6 +47,11 @@ smoke_builder = SmokeCaseBuilder()
 class ExportRequest(BaseModel):
     selected_markers: List[str]
     file_data: str  # base64编码的文件数据
+
+class XMindExportRequest(BaseModel):
+    selected_markers: List[str]
+    file_data: str  # base64编码的文件数据
+    test_case_titles: List[str]  # 导出的测试用例标题列表
 
 class AnalyzeResponse(BaseModel):
     filename: str
@@ -122,11 +137,8 @@ async def debug_analyze_xmind(file: UploadFile = File(...)):
         logger.info(f"调试分析文件: {file.filename}, 大小: {len(file_content)} bytes")
         
         # 使用xmindparser直接解析，查看原始结构
-        import io
-        from xmindparser import xmind_to_dict
-        
         file_obj = io.BytesIO(file_content)
-        xmind_data = xmind_to_dict(file_obj)
+        xmind_data = xmindparser.xmind_to_dict(file_obj)
         
         # 打印原始数据结构（用于调试）
         logger.info(f"XMind原始数据结构: {xmind_data}")
@@ -309,6 +321,67 @@ async def export_smoke_cases(request: ExportRequest):
     except Exception as e:
         logger.error(f"导出冒烟用例时出错: {str(e)}")
         raise HTTPException(status_code=500, detail=f"导出失败: {str(e)}")
+
+@app.post("/api/export-xmind")
+async def export_xmind_filtered(request: XMindExportRequest):
+    """
+    基于markerId精确过滤XMind文件并导出
+    完全保持原始样式和结构
+    """
+    try:
+        logger.info(f"🚀 开始基于markerId过滤XMind文件")
+        logger.info(f"选中标识符: {request.selected_markers}")
+        logger.info(f"测试用例数量: {len(request.test_case_titles)}")
+        
+        # 验证请求数据
+        if not request.selected_markers:
+            raise HTTPException(status_code=400, detail="请至少选择一个标识符")
+        
+        if not request.file_data:
+            raise HTTPException(status_code=400, detail="缺少文件数据")
+        
+        # 验证base64数据
+        try:
+            file_bytes = base64.b64decode(request.file_data)
+            logger.info(f"原始文件大小: {len(file_bytes):,} bytes")
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"文件数据解码失败: {str(e)}")
+        
+        # 使用新的markerId过滤器进行精确过滤
+        try:
+            filter_result = xmind_filter.filter_xmind_by_markers(
+                file_data=request.file_data,  # 直接传递base64数据
+                selected_markers=request.selected_markers,  # 使用新的参数名
+                engine='lxml'  # 使用lxml进行高性能处理
+            )
+            
+            logger.info(f"🎉 markerId过滤完成！")
+            logger.info(f"处理统计: {filter_result['processing_details']}")
+            
+        except Exception as e:
+            logger.error(f"❌ markerId过滤失败: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"XMind文件过滤失败: {str(e)}")
+        
+        # 返回结果
+        return {
+            "success": True,
+            "message": "XMind文件基于markerId精确过滤成功",
+            "file_data": filter_result['file_data'],  # 已经是base64格式
+            "filename": "filtered_markers.xmind",
+            "processing_details": filter_result['processing_details']
+        }
+                
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ XMind文件导出过程中发生错误: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"导出过程失败: {str(e)}")
+
+def create_xmind_metadata(build_path: Path):
+    """
+    创建XMind文件所需的元数据文件
+    """
+    # 这个函数现在不再需要，因为我们直接复制原始文件的元数据
 
 def start_server():
     """启动服务器函数"""

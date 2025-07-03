@@ -15,7 +15,7 @@ import { RouterView } from 'vue-router'
     </main>
     
     <footer class="app-footer">
-      <p>&copy; 2024 XMind 冒烟测试用例导出工具</p>
+      <p>&copy; 2025 XMind 冒烟测试用例导出工具</p>
     </footer>
   </div>
 </template>

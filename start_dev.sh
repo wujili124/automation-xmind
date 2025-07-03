@@ -1,57 +1,40 @@
 #!/bin/bash
 
-# XMind冒烟测试用例导出工具 - 开发环境启动脚本
-# 同时启动前端Vue.js和后端FastAPI服务
+# 颜色定义
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
 
-echo "🚀 XMind冒烟测试用例导出工具 - 开发环境启动"
-echo "=================================================="
+echo -e "${GREEN}启动开发环境...${NC}"
 
-# 检查Node.js是否安装
-if ! command -v node &> /dev/null; then
-    echo "❌ Node.js未安装，请先安装Node.js 16+"
-    exit 1
+# 检查是否存在Python虚拟环境
+if [ ! -d "backend/venv" ]; then
+    echo -e "${BLUE}创建Python虚拟环境...${NC}"
+    cd backend
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    cd ..
+else
+    echo -e "${BLUE}使用已存在的Python虚拟环境${NC}"
 fi
 
-# 检查Python是否安装
-if ! command -v python &> /dev/null && ! command -v python3 &> /dev/null; then
-    echo "❌ Python未安装，请先安装Python 3.8+"
-    exit 1
-fi
+# 启动后端服务
+echo -e "${GREEN}启动后端服务...${NC}"
+cd backend
+source venv/bin/activate
+# 设置开发环境变量
+export FRONTEND_URL="http://localhost:5173"
+uvicorn main:app --reload --port 8000 &
+cd ..
 
-# 检查frontend目录
-if [ ! -d "frontend" ]; then
-    echo "❌ frontend目录不存在"
-    exit 1
-fi
-
-# 检查backend目录
-if [ ! -d "backend" ]; then
-    echo "❌ backend目录不存在"
-    exit 1
-fi
-
-# 进入frontend目录
+# 启动前端服务
+echo -e "${GREEN}启动前端服务...${NC}"
 cd frontend
-
-# 检查是否安装了npm依赖
+# 安装依赖（如果需要）
 if [ ! -d "node_modules" ]; then
-    echo "📥 安装前端依赖..."
+    echo -e "${BLUE}安装前端依赖...${NC}"
     npm install
 fi
-
-# 检查是否安装了concurrently
-if ! npm list concurrently &> /dev/null; then
-    echo "📥 安装concurrently..."
-    npm install --save-dev concurrently
-fi
-
-echo ""
-echo "🌟 启动服务："
-echo "   🌐 前端: http://localhost:5173"
-echo "   🐍 后端: http://localhost:8000"
-echo ""
-echo "💡 按 Ctrl+C 停止所有服务"
-echo ""
-
 # 启动开发服务器
 npm run dev 

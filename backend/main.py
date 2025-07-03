@@ -42,7 +42,11 @@ if os.path.exists("static"):
 # 配置CORS - 允许所有来源（生产环境）
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 允许所有来源
+    allow_origins=[
+        "http://localhost:5173",  # 开发环境
+        "https://*.vercel.app",   # Vercel预览环境
+        os.getenv("FRONTEND_URL", "*")  # 生产环境前端URL
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

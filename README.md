@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 一个智能化的XMind思维导图转冒烟测试用例工具，支持标识符识别、智能层级合并和多格式导出。
-
+ 
 ## ✨ 核心功能特性
 
 ### 🎯 智能分析

@@ -1,0 +1,13 @@
+{
+  "name": "xmind-automation",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "dev": "cd frontend && npm run dev",
+    "install": "cd frontend && npm install"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=16"
+  }
+} 

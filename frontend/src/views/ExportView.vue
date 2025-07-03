@@ -432,12 +432,117 @@ const downloadJson = () => {
   ElMessage.success("文件下载已开始");
 };
 
-const exportExcel = () => {
+const exportExcel = async () => {
   if (!exportResult.value || !testCasesTableData.value.length) {
     ElMessage.error("没有可导出的测试用例数据");
     return;
   }
 
+  if (!analysisData.value?.file_data) {
+    ElMessage.error("缺少原始文件数据，无法生成Excel");
+    return;
+  }
+
+  try {
+    ElMessage.info("正在生成增强层级合并Excel文件...");
+    
+    console.log("调用增强层级合并API:", {
+      selectedMarkers: selectedMarkers.value,
+      hasFileData: !!analysisData.value.file_data
+    });
+    
+    // 调用后端的增强层级合并API
+    const response = await axios.post(
+      `${API_BASE_URL}/api/export-enhanced-hierarchical`,
+      {
+        selected_markers: selectedMarkers.value,
+        file_data: analysisData.value.file_data,
+      },
+      {
+        timeout: 30000, // 30秒超时
+      }
+    );
+    
+    if (response.data.success) {
+      console.log("增强层级合并Excel生成成功:", {
+        hasMergedCells: response.data.export_details?.merged_regions_count > 0,
+        mergedRegions: response.data.export_details?.merged_regions_count,
+        dataRows: response.data.export_details?.data_rows,
+        features: response.data.export_details?.features
+      });
+      
+      // 将base64数据转换为Blob
+      const binaryString = atob(response.data.file_data);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const blob = new Blob([bytes], { 
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+      });
+      
+      // 下载文件
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      
+      const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
+      a.download = `🔥增强层级合并_冒烟测试用例_${timestamp}.xlsx`;
+      
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      // 显示详细的成功信息
+      const details = response.data.export_details;
+      const mergedCount = details?.merged_regions_count || 0;
+      const dataRows = details?.data_rows || 0;
+      const features = details?.features || [];
+      
+      ElMessage.success({
+        message: `🎉 增强层级合并Excel导出成功！\n✅ 数据行数: ${dataRows}行\n✅ 智能合并: ${mergedCount}个区域\n✅ 特性: ${features.slice(0, 2).join(", ")}`,
+        duration: 8000,
+        showClose: true
+      });
+      
+      console.log("Excel文件下载完成，文件名包含🔥标识");
+      
+    } else {
+      throw new Error(response.data.message || "后端处理失败");
+    }
+    
+  } catch (error: any) {
+    console.error("增强Excel导出失败:", error);
+    
+    let errorMessage = "增强Excel导出失败";
+    if (error.response?.data?.detail) {
+      errorMessage = `后端错误: ${error.response.data.detail}`;
+    } else if (error.message) {
+      errorMessage = `错误: ${error.message}`;
+    }
+    
+    ElMessage.error(errorMessage);
+    
+    // 如果后端失败，提供传统Excel作为备选方案
+    ElMessageBox.confirm(
+      '增强版导出失败，是否生成传统格式Excel作为备选？',
+      '导出失败',
+      {
+        confirmButtonText: '生成传统格式',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    ).then(() => {
+      exportExcelTraditional();
+    }).catch(() => {
+      ElMessage.info('已取消导出');
+    });
+  }
+};
+
+// 传统Excel导出方法（作为备选方案）
+const exportExcelTraditional = () => {
   try {
     // 准备Excel数据
     const excelData = testCasesTableData.value.map((testCase) => ({
@@ -508,15 +613,15 @@ const exportExcel = () => {
 
     // 生成文件名
     const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
-    const filename = `冒烟测试用例_${timestamp}.xlsx`;
+    const filename = `传统格式_冒烟测试用例_${timestamp}.xlsx`;
 
     // 导出文件
     XLSX.writeFile(wb, filename);
 
-    ElMessage.success(`Excel文件已导出: ${filename}`);
+    ElMessage.success(`传统格式Excel文件已导出: ${filename}`);
   } catch (error) {
-    console.error("Excel导出失败:", error);
-    ElMessage.error("Excel导出失败，请重试");
+    console.error("传统Excel导出失败:", error);
+    ElMessage.error("传统Excel导出失败，请重试");
   }
 };
 

@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import List, Dict, Any
 import uvicorn
@@ -34,10 +35,14 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# 配置CORS - 添加5173端口支持
+# 挂载静态文件（前端构建产物）
+if os.path.exists("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# 配置CORS - 允许所有来源（生产环境）
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:8080", "http://localhost:5173", "http://localhost:5174"],
+    allow_origins=["*"],  # 允许所有来源
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -72,9 +77,12 @@ class TestDataRequest(BaseModel):
     test_data: Dict[str, Any]
 
 @app.get("/")
-async def root():
-    """健康检查接口"""
-    return {"message": "XMind冒烟测试用例导出工具API正常运行", "status": "success"}
+async def read_root():
+    """返回前端页面"""
+    static_path = "static/index.html"
+    if os.path.exists(static_path):
+        return FileResponse(static_path)
+    return {"message": "XMind冒烟测试用例导出工具API正常运行", "status": "success", "note": "前端文件未找到"}
 
 @app.post("/api/test/analyze")
 async def test_analyze(request: TestDataRequest):

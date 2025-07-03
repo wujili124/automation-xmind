@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import uvicorn
 import logging
 import base64
@@ -15,6 +15,8 @@ import tempfile
 import os
 from pathlib import Path
 from datetime import datetime
+from pythonjsonlogger import jsonlogger
+import sys
 
 from xmind_parser import XMindAnalyzer
 from smoke_case_builder import SmokeCaseBuilder
@@ -25,8 +27,12 @@ from hierarchical_excel_exporter import HierarchicalExcelExporter
 from enhanced_hierarchical_exporter import EnhancedHierarchicalExporter
 
 # 配置日志
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
+logHandler = logging.StreamHandler(sys.stdout)
+formatter = jsonlogger.JsonFormatter()
+logHandler.setFormatter(formatter)
+logger.addHandler(logHandler)
+logger.setLevel(logging.INFO)
 
 # 创建FastAPI应用
 app = FastAPI(
@@ -79,6 +85,15 @@ class AnalyzeResponse(BaseModel):
 class TestDataRequest(BaseModel):
     """测试数据请求模型"""
     test_data: Dict[str, Any]
+
+@app.get("/health")
+async def health_check():
+    """健康检查端点"""
+    return {
+        "status": "healthy",
+        "timestamp": datetime.now().isoformat(),
+        "version": "1.0.0"
+    }
 
 @app.get("/")
 async def read_root():
@@ -608,8 +623,18 @@ def create_xmind_metadata(build_path: Path):
 
 def start_server():
     """启动服务器函数"""
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+    port = int(os.getenv("PORT", 8000))
+    host = os.getenv("HOST", "0.0.0.0")
+    log_level = os.getenv("LOG_LEVEL", "info")
+    
+    logger.info(f"Starting server on {host}:{port}")
+    uvicorn.run(
+        app, 
+        host=host, 
+        port=port, 
+        log_level=log_level
+    )
 
 if __name__ == "__main__":
-    print("🚀 正在启动XMind冒烟测试用例导出工具API服务器...")
+    logger.info("🚀 正在启动XMind冒烟测试用例导出工具API服务器...")
     start_server() 

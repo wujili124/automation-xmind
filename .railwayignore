@@ -1,3 +1,17 @@
+# 严格忽略所有非后端文件
+*
+!backend/
+!backend/**/*.py
+!backend/requirements.txt
+!railway.json
+
+# 即使在backend目录中也忽略这些
+backend/**/__pycache__/
+backend/.pytest_cache/
+backend/venv/
+backend/*.pyc
+backend/**/*.pyc
+
 # 忽略前端相关文件和目录
 frontend/
 node_modules/
@@ -8,8 +22,6 @@ dist/
 *.js
 *.ts
 *.json
-!railway.json
-!backend/**/*.json
 
 # 忽略版本控制
 .git/

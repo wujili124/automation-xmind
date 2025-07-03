@@ -1,0 +1,24 @@
+# 忽略前端相关文件和目录
+frontend/
+node_modules/
+src/
+public/
+dist/
+*.vue
+*.js
+*.ts
+*.json
+!railway.json
+!backend/**/*.json
+
+# 忽略版本控制
+.git/
+.gitignore
+
+# 忽略开发文件
+*.log
+.DS_Store
+.env
+.env.*
+.vscode/
+.idea/ 

@@ -67,22 +67,24 @@ class XMindAnalyzer:
             # 统计适合冒烟测试的节点数量
             suitable_nodes = self._count_suitable_smoke_nodes(all_nodes)
             
-            # 构建返回结果
+            # 构建返回结果 - 支持所有发现的标识符
             markers_found = []
             for marker_id, count in marker_stats.items():
-                if marker_id in self.marker_id_to_symbol:
-                    # 获取包含该标识符的节点示例
-                    sample_nodes = [
-                        node['title'] for node in all_nodes 
-                        if marker_id in node.get('markers', [])
-                    ][:3]  # 最多显示3个示例
-                    
-                    markers_found.append({
-                        "markerId": marker_id,
-                        "symbol": self.marker_id_to_symbol[marker_id],
-                        "count": count,
-                        "sample_nodes": sample_nodes
-                    })
+                # 获取包含该标识符的节点示例
+                sample_nodes = [
+                    node['title'] for node in all_nodes 
+                    if marker_id in node.get('markers', [])
+                ][:3]  # 最多显示3个示例
+                
+                # 动态生成友好名称，优先使用预定义映射
+                symbol = self._generate_friendly_symbol(marker_id)
+                
+                markers_found.append({
+                    "markerId": marker_id,
+                    "symbol": symbol,
+                    "count": count,
+                    "sample_nodes": sample_nodes
+                })
             
             result = {
                 "filename": filename,
@@ -91,7 +93,21 @@ class XMindAnalyzer:
                 "suitable_for_smoke": suitable_nodes
             }
             
+            # 统计标识符类型
+            predefined_count = sum(1 for marker in markers_found if marker["markerId"] in self.marker_id_to_symbol)
+            discovered_count = len(markers_found) - predefined_count
+            
             logger.info(f"分析完成: 总节点数={len(all_nodes)}, 发现标识符={len(markers_found)}, 适合冒烟测试={suitable_nodes}")
+            
+            if discovered_count > 0:
+                logger.info(f"🎉 动态发现 {discovered_count} 个新标识符:")
+                for marker in markers_found:
+                    if marker["markerId"] not in self.marker_id_to_symbol:
+                        logger.info(f"  📍 {marker['markerId']} → {marker['symbol']} ({marker['count']}个节点)")
+            
+            if predefined_count > 0:
+                logger.info(f"✅ 识别到 {predefined_count} 个预定义标识符")
+            
             return result
             
         except Exception as e:
@@ -377,6 +393,101 @@ class XMindAnalyzer:
             return self._map_string_marker(marker_id)
         
         return None
+    
+    def _generate_friendly_symbol(self, marker_id: str) -> str:
+        """
+        为标识符生成友好的显示名称
+        优先使用预定义映射，对未知标识符智能生成名称
+        
+        Args:
+            marker_id: 标识符ID
+            
+        Returns:
+            友好的显示名称
+        """
+        # 1. 优先使用预定义映射（向后兼容）
+        if marker_id in self.marker_id_to_symbol:
+            return self.marker_id_to_symbol[marker_id]
+        
+        # 2. 对于新发现的标识符，使用智能规则生成名称
+        import re
+        
+        # 优先级类标识符
+        priority_match = re.match(r'^priority-(\d+)$', marker_id)
+        if priority_match:
+            num = priority_match.group(1)
+            color_map = {'1': '红色', '2': '橙色', '3': '黄色', '4': '绿色', '5': '灰色'}
+            color = color_map.get(num, f'{num}级')
+            return f'优先级{num} ({color}{num})'
+        
+        # 旗帜类标识符
+        flag_match = re.match(r'^flag-(\w+)$', marker_id)
+        if flag_match:
+            color = flag_match.group(1)
+            color_map = {
+                'red': '红', 'yellow': '黄', 'green': '绿', 
+                'blue': '蓝', 'purple': '紫', 'orange': '橙'
+            }
+            chinese_color = color_map.get(color.lower(), color)
+            return f'{chinese_color}旗'
+        
+        # 星标类标识符
+        star_match = re.match(r'^star-(\w+)$', marker_id)
+        if star_match:
+            color = star_match.group(1)
+            color_map = {
+                'red': '红', 'yellow': '黄', 'green': '绿', 
+                'blue': '蓝', 'purple': '紫', 'orange': '橙'
+            }
+            chinese_color = color_map.get(color.lower(), color)
+            return f'{chinese_color}星'
+        
+        # 进度类标识符
+        progress_match = re.match(r'^progress-(\d+)$', marker_id)
+        if progress_match:
+            percent = progress_match.group(1)
+            return f'进度{percent}%'
+        
+        # 箭头类标识符
+        arrow_match = re.match(r'^arrow-(\w+)$', marker_id)
+        if arrow_match:
+            direction = arrow_match.group(1)
+            direction_map = {
+                'up': '上', 'down': '下', 'left': '左', 'right': '右',
+                'up-right': '右上', 'up-left': '左上', 
+                'down-right': '右下', 'down-left': '左下'
+            }
+            chinese_direction = direction_map.get(direction.lower(), direction)
+            return f'{chinese_direction}箭头'
+        
+        # 任务状态类标识符
+        task_match = re.match(r'^task-(\w+)$', marker_id)
+        if task_match:
+            status = task_match.group(1)
+            status_map = {
+                'done': '已完成', 'todo': '待办', 'doing': '进行中',
+                'cancelled': '已取消', 'paused': '已暂停'
+            }
+            chinese_status = status_map.get(status.lower(), status)
+            return f'任务-{chinese_status}'
+        
+        # 表情类标识符
+        if 'smiley' in marker_id or 'smile' in marker_id:
+            return '笑脸表情'
+        elif 'sad' in marker_id:
+            return '伤心表情'
+        elif 'angry' in marker_id:
+            return '生气表情'
+        
+        # 通用规则：将连字符替换为空格，首字母大写
+        friendly_name = marker_id.replace('-', ' ').replace('_', ' ')
+        friendly_name = ' '.join(word.capitalize() for word in friendly_name.split())
+        
+        # 如果还是看起来像内部ID，则添加前缀
+        if re.match(r'^[a-z0-9-_]+$', marker_id, re.IGNORECASE):
+            return f'标识符: {friendly_name}'
+        
+        return friendly_name
     
     def _count_suitable_smoke_nodes(self, all_nodes: List[Dict]) -> int:
         """

@@ -373,51 +373,181 @@ class SmokeCaseBuilder:
         return None
     
     def _filter_nodes_by_markers(self, all_nodes: List[Dict], selected_markers: List[str]) -> List[Dict]:
-        """根据选中的标识符筛选节点"""
+        """
+        根据选中的标识符筛选节点
+        同步XMind导出的三重逻辑：
+        1. 节点本身有标识 → 保留
+        2. 父节点有标识 → 所有子节点保留（完整子树导出）
+        3. 子节点有标识 → 父节点路径保留（保持完整路径）
+        """
         filtered_nodes = []
         
         for node in all_nodes:
-            node_markers = node.get('markers', [])
-            # 检查节点是否包含任一选中的标识符
-            if any(marker in selected_markers for marker in node_markers):
+            if self._should_keep_node(node, all_nodes, selected_markers):
                 filtered_nodes.append(node)
         
+        logger.info(f"标识符筛选：从 {len(all_nodes)} 个节点筛选出 {len(filtered_nodes)} 个节点")
         return filtered_nodes
     
+    def _should_keep_node(self, node: Dict, all_nodes: List[Dict], selected_markers: List[str]) -> bool:
+        """
+        判断节点是否应该保留（同步XMind导出逻辑）
+        实现与xmind_marker_filter.should_keep_xml_node相同的逻辑
+        """
+        node_path = node.get('path', '')
+        node_markers = node.get('markers', [])
+        
+        # 1. 检查当前节点是否包含目标标记
+        if any(marker in selected_markers for marker in node_markers):
+            logger.debug(f"保留包含目标标记的节点: {node.get('title', '')} (标记: {[m for m in node_markers if m in selected_markers]})")
+            return True
+        
+        # 2. 检查祖先节点是否包含目标标记（作为被标记节点的子节点保留）
+        if self._has_ancestor_with_marker(node, all_nodes, selected_markers):
+            logger.debug(f"保留被标记祖先节点的子节点: {node.get('title', '')}")
+            return True
+        
+        # 3. 检查是否有后代包含目标标记（作为路径节点保留）
+        if self._has_descendant_with_marker(node, all_nodes, selected_markers):
+            logger.debug(f"保留包含有效子节点的父节点: {node.get('title', '')}")
+            return True
+        
+        return False
+    
+    def _has_ancestor_with_marker(self, node: Dict, all_nodes: List[Dict], selected_markers: List[str]) -> bool:
+        """检查祖先节点是否包含目标标记"""
+        node_path = node.get('path', '')
+        
+        # 获取当前节点的路径层级
+        path_parts = node_path.split(' > ')
+        
+        # 检查每个祖先路径是否有包含目标标记的节点
+        for i in range(1, len(path_parts)):
+            ancestor_path = ' > '.join(path_parts[:i])
+            
+            # 查找对应的祖先节点
+            for ancestor_node in all_nodes:
+                if ancestor_node.get('path') == ancestor_path:
+                    ancestor_markers = ancestor_node.get('markers', [])
+                    if any(marker in selected_markers for marker in ancestor_markers):
+                        return True
+        
+        return False
+    
+    def _has_descendant_with_marker(self, node: Dict, all_nodes: List[Dict], selected_markers: List[str]) -> bool:
+        """检查后代节点是否包含目标标记"""
+        node_path = node.get('path', '')
+        
+        # 查找所有以当前节点路径开头的子节点
+        for descendant_node in all_nodes:
+            descendant_path = descendant_node.get('path', '')
+            
+            # 检查是否是子节点（路径以当前节点路径开头，且更长）
+            if (descendant_path.startswith(node_path + ' > ') and 
+                descendant_path != node_path):
+                
+                descendant_markers = descendant_node.get('markers', [])
+                if any(marker in selected_markers for marker in descendant_markers):
+                    return True
+        
+        return False
+    
     def _filter_suitable_smoke_nodes(self, nodes: List[Dict]) -> List[Dict]:
-        """筛选适合冒烟测试的节点"""
+        """筛选适合冒烟测试的节点 - 增强版数据质量控制"""
         suitable_nodes = []
         
         for node in nodes:
-            if self._is_suitable_for_smoke_test(node):
+            if self._is_suitable_for_smoke_test_enhanced(node):
                 suitable_nodes.append(node)
         
+        logger.info(f"数据质量筛选：{len(nodes)} -> {len(suitable_nodes)} 个高质量节点")
         return suitable_nodes
     
-    def _is_suitable_for_smoke_test(self, node: Dict) -> bool:
-        """判断节点是否适合作为冒烟测试用例"""
-        # 检查是否包含标识符
-        if not node.get('markers'):
-            return False
-            
-        # 检查节点层级（2-6层比较合适，进一步放宽条件）
+    def _is_suitable_for_smoke_test_enhanced(self, node: Dict) -> bool:
+        """
+        增强版节点质量检查 - 确保Excel表格无空白行
+        """
+        title = node.get('title', '').strip()
+        path = node.get('path', '').strip()
         level = node.get('level', 0)
-        if level < 2 or level > 6:
-            return False
-            
-        # 检查节点描述是否包含测试相关的关键词（大幅放宽条件）
-        title = node.get('title', '').lower()
         
-        # 排除明显的配置类节点
-        if any(keyword in title for keyword in self.config_keywords):
+        # 1. 基础数据完整性检查
+        if not title or not path:
+            logger.debug(f"跳过空数据节点: title='{title}', path='{path}'")
             return False
-            
-        # 排除过于简单的节点（只有一两个字的）
-        if len(title.strip()) < 3:
+        
+        # 2. 标题有效性检查（更严格）
+        if len(title) < 3:
+            logger.debug(f"跳过标题过短的节点: '{title}'")
             return False
-            
-        # 其他节点都认为适合作为冒烟测试用例
+        
+        # 3. 路径完整性检查
+        path_parts = [part.strip() for part in path.split(' > ')]
+        if len(path_parts) < 2:  # 至少需要2级路径
+            logger.debug(f"跳过路径不完整的节点: '{path}'")
+            return False
+        
+        # 4. 检查路径中是否有空元素
+        if any(not part or len(part.strip()) < 2 for part in path_parts):
+            logger.debug(f"跳过包含空路径元素的节点: '{path}'")
+            return False
+        
+        # 5. 层级合理性检查
+        if level < 2 or level > 6:
+            logger.debug(f"跳过层级不合理的节点: level={level}, title='{title}'")
+            return False
+        
+        # 6. 排除明显的配置类节点
+        if any(keyword in title.lower() for keyword in self.config_keywords):
+            logger.debug(f"跳过配置类节点: '{title}'")
+            return False
+        
+        # 7. 内容有意义性检查
+        if self._is_meaningless_content(title, path):
+            logger.debug(f"跳过无意义内容节点: '{title}'")
+            return False
+        
+        # 8. 检查是否为纯路径节点（没有实际测试内容）
+        if self._is_path_only_node(node):
+            logger.debug(f"跳过纯路径节点: '{title}'")
+            return False
+        
         return True
+    
+    def _is_meaningless_content(self, title: str, path: str) -> bool:
+        """检查内容是否有意义"""
+        content = (title + ' ' + path).lower()
+        
+        # 排除只包含数字、符号或者重复字符的内容
+        if title.strip() in ['...', '---', '###', '***', 'xxx']:
+            return True
+        
+        # 排除纯数字或者纯符号的标题
+        if title.strip().isdigit() or all(c in '.-_*#@!()[]{}' for c in title.strip()):
+            return True
+        
+        # 排除明显的占位符内容
+        placeholder_keywords = ['placeholder', '占位符', 'todo', '待定', '待补充', '空白', '无内容']
+        if any(keyword in content for keyword in placeholder_keywords):
+            return True
+        
+        return False
+    
+    def _is_path_only_node(self, node: Dict) -> bool:
+        """检查是否为纯路径节点（用于层级结构但没有实际测试内容）"""
+        title = node.get('title', '').strip()
+        children = node.get('children', [])
+        
+        # 如果节点没有子节点且标题过于简单，可能是路径节点
+        if not children and len(title.split()) <= 1:
+            return True
+        
+        # 检查是否为常见的分类节点（没有具体测试内容）
+        category_keywords = ['分类', '目录', '模块', '组', '章节', '部分', 'section', 'module']
+        if any(keyword in title.lower() for keyword in category_keywords) and not children:
+            return True
+        
+        return False
     
     def _deduplicate_nodes(self, nodes: List[Dict]) -> List[Dict]:
         """去重处理，合并相同路径的节点"""
@@ -433,11 +563,28 @@ class SmokeCaseBuilder:
         return unique_nodes
     
     def _build_test_case(self, node: Dict, case_number: int) -> Optional[Dict[str, Any]]:
-        """构建单个测试用例"""
+        """构建单个测试用例 - 增强版质量控制"""
         try:
-            title = node.get('title', '')
-            path = node.get('path', '')
+            title = node.get('title', '').strip()
+            path = node.get('path', '').strip()
             markers = node.get('markers', [])
+            
+            # 1. 基础数据验证
+            if not title or not path:
+                logger.warning(f"节点数据不完整，跳过构建: title='{title}', path='{path}'")
+                return None
+            
+            # 2. 路径有效性检查
+            path_parts = [part.strip() for part in path.split(' > ') if part.strip()]
+            if len(path_parts) < 2:
+                logger.warning(f"路径不完整，跳过构建: '{path}'")
+                return None
+                
+            # 3. 清理和验证路径
+            cleaned_path = ' > '.join(path_parts)
+            if cleaned_path != path:
+                logger.info(f"路径已清理: '{path}' -> '{cleaned_path}'")
+                path = cleaned_path
             
             # 构建用例ID
             case_id = f"SMOKE_{case_number:03d}"
@@ -445,27 +592,32 @@ class SmokeCaseBuilder:
             # 确定优先级
             priority = self._get_highest_priority(markers)
             
-            # 提取模块名（通常是路径的第二级）
-            path_parts = path.split(' > ')
-            module = path_parts[1] if len(path_parts) > 1 else path_parts[0]
+            # 提取模块名（使用第一级路径，确保不为空）
+            module = path_parts[0] if path_parts else "未分类"
             
             # 构建测试步骤
-            steps = self._build_test_steps(node)
+            steps = self._build_test_steps_enhanced(node)
             
-            # 检查完整性（确保有步骤）
-            if not steps:
-                logger.warning(f"节点 {title} 没有有效的测试步骤，跳过")
+            # 4. 严格检查步骤完整性
+            if not steps or len(steps) == 0:
+                logger.warning(f"节点 '{title}' 没有有效的测试步骤，跳过构建")
+                return None
+            
+            # 5. 验证步骤质量
+            valid_steps = [step for step in steps if self._is_valid_step(step)]
+            if not valid_steps:
+                logger.warning(f"节点 '{title}' 的步骤都无效，跳过构建")
                 return None
             
             # 构建测试用例
             test_case = {
                 "case_id": case_id,
-                "title": self._normalize_title(title),
+                "title": self._normalize_title_enhanced(title),
                 "module": module,
                 "test_path": path,
                 "priority": priority,
                 "markers": markers,
-                "steps": steps,
+                "steps": valid_steps,
                 "smoke_criteria": {
                     "is_core_function": self._is_core_function(title, path),
                     "affects_main_flow": self._affects_main_flow(title),
@@ -473,6 +625,7 @@ class SmokeCaseBuilder:
                 }
             }
             
+            logger.debug(f"成功构建测试用例: {case_id} - {title}")
             return test_case
             
         except Exception as e:
@@ -491,39 +644,72 @@ class SmokeCaseBuilder:
         
         return 'P3'  # 默认优先级
     
-    def _normalize_title(self, title: str) -> str:
-        """规范化测试用例标题"""
-        # 确保标题包含"验证"或"测试"
+    def _normalize_title_enhanced(self, title: str) -> str:
+        """增强版标题规范化"""
         normalized = title.strip()
         
-        if not any(word in normalized for word in ['验证', '测试', '检查']):
-            if any(word in normalized for word in ['登录', '注册', '支付']):
+        # 移除多余的空格和特殊字符
+        import re
+        normalized = re.sub(r'\s+', ' ', normalized)  # 多个空格合并为一个
+        normalized = re.sub(r'^[^\w\u4e00-\u9fff]+|[^\w\u4e00-\u9fff]+$', '', normalized)  # 移除开头结尾的特殊字符
+        
+        # 确保标题包含"验证"或"测试"
+        if not any(word in normalized for word in ['验证', '测试', '检查', '确认']):
+            if any(word in normalized for word in ['登录', '注册', '支付', '搜索', '添加', '删除', '修改']):
                 normalized = f"{normalized}功能验证"
             else:
                 normalized = f"{normalized}验证"
         
         return normalized
     
-    def _build_test_steps(self, node: Dict) -> List[Dict[str, Any]]:
-        """构建测试步骤"""
+    def _build_test_steps_enhanced(self, node: Dict) -> List[Dict[str, Any]]:
+        """构建增强版测试步骤 - 确保步骤质量"""
         steps = []
         children = node.get('children', [])
+        title = node.get('title', '')
         
         if children:
-            # 使用子节点作为测试步骤
-            for i, child in enumerate(children[:10]):  # 限制最多10步
-                step = {
-                    "step": i + 1,
-                    "action": child.get('title', ''),
-                    "expected": self._generate_expected_result(child.get('title', ''))
-                }
-                steps.append(step)
-        else:
-            # 没有子节点时，根据标题生成基础步骤
-            title = node.get('title', '')
-            steps = self._generate_basic_steps(title)
+            # 使用子节点作为测试步骤，但要过滤无效子节点
+            valid_children = [
+                child for child in children[:10] 
+                if child.get('title', '').strip() and len(child.get('title', '').strip()) >= 3
+            ]
+            
+            for i, child in enumerate(valid_children):
+                child_title = child.get('title', '').strip()
+                if child_title:  # 再次确认不为空
+                    step = {
+                        "step": i + 1,
+                        "action": child_title,
+                        "expected": self._generate_expected_result(child_title)
+                    }
+                    steps.append(step)
+        
+        # 如果没有有效的子节点步骤，根据标题生成基础步骤
+        if not steps:
+            steps = self._generate_basic_steps_enhanced(title)
         
         return steps
+    
+    def _is_valid_step(self, step: Dict[str, Any]) -> bool:
+        """验证测试步骤是否有效"""
+        action = step.get('action', '').strip()
+        expected = step.get('expected', '').strip()
+        
+        # 检查动作和期望结果都不为空
+        if not action or not expected:
+            return False
+        
+        # 检查最小长度
+        if len(action) < 3 or len(expected) < 3:
+            return False
+        
+        # 排除无意义的步骤
+        meaningless_actions = ['...', '---', 'xxx', 'todo', '待定', '占位符']
+        if action.lower() in meaningless_actions or expected.lower() in meaningless_actions:
+            return False
+        
+        return True
     
     def _generate_expected_result(self, action: str) -> str:
         """根据操作生成期望结果"""
@@ -552,29 +738,36 @@ class SmokeCaseBuilder:
         else:
             return "操作成功完成"
     
-    def _generate_basic_steps(self, title: str) -> List[Dict[str, Any]]:
-        """为没有子节点的测试用例生成基础步骤"""
+    def _generate_basic_steps_enhanced(self, title: str) -> List[Dict[str, Any]]:
+        """为没有子节点的测试用例生成增强版基础步骤"""
         title_lower = title.lower()
         
         if '登录' in title_lower:
             return [
-                {"step": 1, "action": "打开登录页面", "expected": "页面正常显示"},
-                {"step": 2, "action": "输入有效用户名密码", "expected": "成功登录系统"}
+                {"step": 1, "action": "打开登录页面", "expected": "登录页面正常显示"},
+                {"step": 2, "action": "输入有效的用户名和密码", "expected": "成功登录系统，跳转到主页"}
             ]
         elif '注册' in title_lower:
             return [
-                {"step": 1, "action": "打开注册页面", "expected": "页面正常显示"},
-                {"step": 2, "action": "填写注册信息", "expected": "注册成功"}
+                {"step": 1, "action": "打开用户注册页面", "expected": "注册页面正常显示"},
+                {"step": 2, "action": "填写完整的注册信息", "expected": "注册成功，收到确认提示"}
             ]
         elif '支付' in title_lower:
             return [
-                {"step": 1, "action": "选择商品", "expected": "商品添加到购物车"},
-                {"step": 2, "action": "进入支付页面", "expected": "支付页面正常显示"},
-                {"step": 3, "action": "完成支付", "expected": "支付成功"}
+                {"step": 1, "action": "选择商品并添加到购物车", "expected": "商品成功添加到购物车"},
+                {"step": 2, "action": "进入支付页面", "expected": "支付页面正常显示订单信息"},
+                {"step": 3, "action": "完成支付流程", "expected": "支付成功，订单状态更新"}
+            ]
+        elif '搜索' in title_lower or '查询' in title_lower:
+            return [
+                {"step": 1, "action": "在搜索框中输入关键词", "expected": "搜索功能正常响应"},
+                {"step": 2, "action": "点击搜索按钮", "expected": "返回相关的搜索结果"}
             ]
         else:
+            # 通用步骤模板
             return [
-                {"step": 1, "action": f"执行{title}", "expected": "操作成功完成"}
+                {"step": 1, "action": f"准备{title}的测试环境", "expected": "测试环境准备完成"},
+                {"step": 2, "action": f"执行{title}操作", "expected": "操作成功完成，结果符合预期"}
             ]
     
     def _is_core_function(self, title: str, path: str) -> bool:

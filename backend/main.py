@@ -109,10 +109,11 @@ async def test_analyze(request: TestDataRequest):
     try:
         logger.info("接收到测试分析请求")
         
-        # 模拟分析结果
+        # 模拟分析结果 - 包含新发现的标识符，演示智能扫描功能
         test_result = {
             "filename": "test.xmind",
             "markers_found": [
+                # 预定义标识符
                 {
                     "markerId": "important",
                     "symbol": "重要 (红色叹号)",
@@ -131,25 +132,44 @@ async def test_analyze(request: TestDataRequest):
                     "count": 1,
                     "sample_nodes": ["登录失败处理"]
                 },
+                # 动态发现的标识符 - 演示智能扫描
                 {
-                    "markerId": "flag-red",
-                    "symbol": "红旗",
-                    "count": 1, 
-                    "sample_nodes": ["注册功能"]
+                    "markerId": "flag-green",
+                    "symbol": "绿旗",
+                    "count": 2,
+                    "sample_nodes": ["支付功能", "订单管理"]
                 },
                 {
-                    "markerId": "star-red",
-                    "symbol": "红星",
+                    "markerId": "star-blue",
+                    "symbol": "蓝星",
                     "count": 1,
-                    "sample_nodes": ["新用户注册验证"]
+                    "sample_nodes": ["数据备份"]
+                },
+                {
+                    "markerId": "progress-75",
+                    "symbol": "进度75%",
+                    "count": 1,
+                    "sample_nodes": ["项目进度"]
+                },
+                {
+                    "markerId": "arrow-up",
+                    "symbol": "上箭头",
+                    "count": 1,
+                    "sample_nodes": ["性能提升"]
+                },
+                {
+                    "markerId": "task-done",
+                    "symbol": "任务-已完成",
+                    "count": 3,
+                    "sample_nodes": ["登录开发", "注册开发", "支付开发"]
                 }
             ],
-            "total_nodes": 10,
-            "suitable_for_smoke": 5,
+            "total_nodes": 15,
+            "suitable_for_smoke": 8,
             "file_data": base64.b64encode(str(request.test_data).encode()).decode()
         }
         
-        logger.info(f"测试分析完成，找到 {len(test_result['markers_found'])} 种标识符")
+        logger.info(f"🎉 测试分析完成，找到 {len(test_result['markers_found'])} 种标识符（包含动态发现的新标识符）")
         return test_result
         
     except Exception as e:

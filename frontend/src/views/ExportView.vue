@@ -262,7 +262,10 @@ const showDetailDialog = ref(false);
 const selectedTestCase = ref<any | null>(null);
 
 // API基础URL
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = ref("http://localhost:8000");
+
+// 检测是否在Electron环境中运行
+const isElectron = ref(false);
 
 // 格式化后的JSON字符串
 const formattedJson = computed(() => {
@@ -287,8 +290,21 @@ const testCasesTableData = computed(() => {
   }));
 });
 
-onMounted(() => {
-  // 从sessionStorage中获取分析数据，而不是从URL query参数
+onMounted(async () => {
+  // 检查是否在Electron环境中
+  isElectron.value = window.electronAPI !== undefined;
+  
+  // 如果在Electron环境中，从主进程获取API URL
+  if (isElectron.value) {
+    try {
+      API_BASE_URL.value = await window.electronAPI.getApiBaseUrl();
+      console.log('在Electron环境中运行，API基础URL:', API_BASE_URL.value);
+    } catch (error) {
+      console.error('获取API基础URL失败:', error);
+    }
+  }
+
+  // 从sessionStorage获取分析数据
   try {
     const dataStr = sessionStorage.getItem("analysisData");
     if (dataStr) {
@@ -361,7 +377,7 @@ const exportTestCases = async () => {
     });
 
     const response = await axios.post(
-      `${API_BASE_URL}/api/export`,
+      `${API_BASE_URL.value}/api/export`,
       {
         selected_markers: selectedMarkers.value,
         file_data: analysisData.value.file_data,
@@ -454,7 +470,7 @@ const exportExcel = async () => {
     
     // 调用后端的增强层级合并API
     const response = await axios.post(
-      `${API_BASE_URL}/api/export-enhanced-hierarchical`,
+      `${API_BASE_URL.value}/api/export-enhanced-hierarchical`,
       {
         selected_markers: selectedMarkers.value,
         file_data: analysisData.value.file_data,
@@ -652,7 +668,7 @@ const exportXMind = async () => {
     
     // 调用后端API进行XMind文件过滤
     const response = await axios.post(
-      `${API_BASE_URL}/api/export-xmind`,
+      `${API_BASE_URL.value}/api/export-xmind`,
       {
         selected_markers: selectedMarkers.value,
         file_data: analysisData.value.file_data,

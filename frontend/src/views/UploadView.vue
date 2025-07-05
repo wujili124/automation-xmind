@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
@@ -63,7 +63,25 @@ const selectedFile = ref<File | null>(null)
 const uploading = ref(false)
 
 // API基础URL
-const API_BASE_URL = 'http://localhost:8000'
+const API_BASE_URL = ref('http://localhost:8000')
+
+// 检测是否在Electron环境中运行
+const isElectron = ref(false)
+
+onMounted(async () => {
+  // 检查是否在Electron环境中
+  isElectron.value = window.electronAPI !== undefined
+  
+  // 如果在Electron环境中，从主进程获取API URL
+  if (isElectron.value) {
+    try {
+      API_BASE_URL.value = await window.electronAPI.getApiBaseUrl()
+      console.log('在Electron环境中运行，API基础URL:', API_BASE_URL.value)
+    } catch (error) {
+      console.error('获取API基础URL失败:', error)
+    }
+  }
+})
 
 const handleFileChange = (file: UploadFile, files: UploadFiles) => {
   console.log('文件选择:', file.name)
@@ -99,7 +117,7 @@ const uploadFile = async () => {
     
     console.log('开始上传文件到后端进行分析...')
     
-    const response = await axios.post(`${API_BASE_URL}/api/analyze`, formData, {
+    const response = await axios.post(`${API_BASE_URL.value}/api/analyze`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       },

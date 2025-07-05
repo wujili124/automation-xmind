@@ -1,8 +1,9 @@
 {
-  "name": "frontend",
-  "version": "0.0.0",
+  "name": "xmind-automation-tool",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
+  "main": "electron.cjs",
   "scripts": {
     "dev": "concurrently \"npm run backend\" \"npm run frontend\" --names \"🐍Backend,🌐Frontend\" --prefix-colors \"bgBlue.bold,bgGreen.bold\" --kill-others-on-fail",
     "frontend": "vite",
@@ -14,7 +15,12 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "electron:dev": "concurrently \"vite\" \"electron electron.cjs\"",
+    "electron:build": "vite build && electron-builder",
+    "electron:build:win": "vite build && electron-builder --win",
+    "electron:build:mac": "vite build && electron-builder --mac",
+    "electron:build:linux": "vite build && electron-builder --linux"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
@@ -32,6 +38,8 @@
     "@vue/eslint-config-typescript": "^14.5.1",
     "@vue/tsconfig": "^0.7.0",
     "concurrently": "^9.2.0",
+    "electron": "^30.0.0",
+    "electron-builder": "^24.13.0",
     "eslint": "^9.29.0",
     "eslint-plugin-vue": "~10.2.0",
     "jiti": "^2.4.2",
@@ -40,5 +48,47 @@
     "vite": "^7.0.0",
     "vite-plugin-vue-devtools": "^7.7.7",
     "vue-tsc": "^2.2.10"
+  },
+  "build": {
+    "appId": "com.xmind.automation",
+    "productName": "XMind冒烟测试用例导出工具",
+    "directories": {
+      "output": "dist_electron"
+    },
+    "files": [
+      "dist/**/*",
+      "electron.cjs",
+      "preload.cjs"
+    ],
+    "extraResources": [
+      {
+        "from": "../backend",
+        "to": "backend",
+        "filter": [
+          "**/*",
+          "!**/__pycache__/**",
+          "!**/.venv/**",
+          "!**/venv/**"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "public/favicon.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "public/favicon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "public/favicon.ico"
+    }
   }
 }

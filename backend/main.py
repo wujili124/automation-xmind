@@ -32,6 +32,9 @@ from hierarchical_excel_exporter import HierarchicalExcelExporter
 from enhanced_hierarchical_exporter import EnhancedHierarchicalExporter
 from xmind_to_excel_converter import xmind_to_excel
 
+# 检测是否在Electron环境中运行
+is_electron = os.environ.get('ELECTRON_RUN') == '1'
+
 # 配置日志
 logger = logging.getLogger()
 logHandler = logging.StreamHandler(sys.stdout)
@@ -39,6 +42,8 @@ formatter = jsonlogger.JsonFormatter()
 logHandler.setFormatter(formatter)
 logger.addHandler(logHandler)
 logger.setLevel(logging.INFO)
+
+logger.info(f"启动环境: {'Electron' if is_electron else '标准'}")
 
 # 创建FastAPI应用
 app = FastAPI(
@@ -51,12 +56,13 @@ app = FastAPI(
 if os.path.exists("static"):
     app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# 配置CORS - 允许所有来源（生产环境）
+# 配置CORS - 允许所有来源
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",  # 开发环境
         "https://*.vercel.app",   # Vercel预览环境
+        "http://localhost:8000",  # Electron环境
         os.getenv("FRONTEND_URL", "*")  # 生产环境前端URL
     ],
     allow_credentials=True,
@@ -700,11 +706,17 @@ def create_xmind_metadata(build_path: Path):
 
 def start_server():
     """启动服务器函数"""
-    port = int(os.getenv("PORT", 8000))
-    host = os.getenv("HOST", "0.0.0.0")
+    # 在Electron环境中使用固定端口和仅本地访问
+    if is_electron:
+        port = 8000
+        host = "127.0.0.1"
+    else:
+        port = int(os.getenv("PORT", 8000))
+        host = os.getenv("HOST", "0.0.0.0")
+    
     log_level = os.getenv("LOG_LEVEL", "info")
     
-    logger.info(f"Starting server on {host}:{port}")
+    logger.info(f"Starting server on {host}:{port} (Electron: {is_electron})")
     uvicorn.run(
         app, 
         host=host, 

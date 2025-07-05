@@ -5,7 +5,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-red.svg)](https://fastapi.tiangolo.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-一个智能化的XMind思维导图转冒烟测试用例工具，支持标识符识别、智能层级合并和多格式导出。
+一个智能化的XMind思维导图转冒烟测试用例工具，支持标识符识别、智能层级合并和多格式导出。现在支持作为Electron桌面应用运行！
  
 ## ✨ 核心功能特性
 
@@ -399,3 +399,42 @@ python final_verification.py           # 最终验证
 ⭐ 如果这个项目对您有帮助，请给我们一个星标！
 
 🔥 **特别推荐**: 体验最新的增强层级合并Excel导出功能，让您的测试用例展示更加直观和专业！
+
+## Electron桌面应用开发
+
+### 开发模式
+
+```bash
+# 进入前端目录
+cd frontend
+
+# 安装依赖
+npm install
+
+# 启动Electron开发模式
+npm run electron:dev
+```
+
+### 构建桌面应用
+
+```bash
+# 构建所有平台
+npm run electron:build
+
+# 仅构建Windows版本
+npm run electron:build:win
+
+# 仅构建macOS版本
+npm run electron:build:mac
+
+# 仅构建Linux版本
+npm run electron:build:linux
+```
+
+构建完成后，可执行文件将位于`frontend/dist_electron`目录中。
+
+## 注意事项
+
+- 桌面应用会在本地启动Python后端服务，无需单独配置
+- 首次启动可能需要较长时间，因为需要初始化Python环境
+- 如果遇到权限问题，请确保Python和Node.js环境正确配置

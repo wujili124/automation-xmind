@@ -85,8 +85,23 @@ class XMindToExcelConverter:
             
             # 从XMind结构中提取层级数据并写入Excel
             hierarchy_data = self._extract_hierarchy(sheets)
-            current_row = 2  # 从第2行开始（第1行是表头）
-            total_rows = self._write_data(ws_main, hierarchy_data, current_row)
+            
+            # 确保数据从第2行开始写入（第1行是表头）
+            start_row = 2
+            logger.info(f"🔢 设置起始行为 {start_row}")
+            
+            # 添加检查确保无无效的空白行
+            if not hierarchy_data:
+                logger.warning("⚠️ 提取的层级数据为空，将创建空的Excel文件")
+            else:
+                logger.info(f"📊 提取了 {len(hierarchy_data)} 个节点数据，准备写入Excel")
+                # 记录第一个节点的信息以便调试
+                if hierarchy_data and len(hierarchy_data) > 0:
+                    first_node = hierarchy_data[0]
+                    logger.info(f"👉 第一个节点: 标题='{first_node.get('title')}', 路径={first_node.get('path')}, 层级={first_node.get('level')}")
+            
+            # 写入数据，从第2行开始
+            total_rows = self._write_data(ws_main, hierarchy_data, start_row)
             
             # 设置列宽
             self._set_column_widths(ws_main, total_rows)
@@ -94,6 +109,9 @@ class XMindToExcelConverter:
             # 创建汇总表
             ws_summary = wb.create_sheet("导出汇总")
             self._create_summary_sheet(ws_summary, hierarchy_data)
+            
+            # 修复：保存前检查并删除空白行，确保没有多余的空白行
+            self._remove_empty_rows(ws_main, start_row)
             
             # 保存Excel文件
             if not output_path:
@@ -117,35 +135,66 @@ class XMindToExcelConverter:
             包含层级结构的数据列表
         """
         hierarchy = []
+        logger.info(f"开始提取层级结构，共有 {len(sheets)} 个工作表")
         
-        for sheet in sheets:
+        for sheet_idx, sheet in enumerate(sheets):
             if not sheet:
+                logger.warning(f"跳过空工作表: 索引 {sheet_idx}")
                 continue
                 
             # 获取根主题
             root_topic = None
             if 'rootTopic' in sheet:
                 root_topic = sheet['rootTopic']
+                logger.info(f"找到rootTopic节点，标题: {root_topic.get('title', '未命名')}")
             elif 'topic' in sheet:
                 root_topic = sheet['topic']
+                logger.info(f"找到topic节点，标题: {root_topic.get('title', '未命名')}")
+            else:
+                # 尝试查找其他可能的根节点位置
+                for key, value in sheet.items():
+                    if isinstance(value, dict) and 'title' in value:
+                        logger.info(f"尝试使用备选节点: {key}, 标题: {value['title']}")
+                        root_topic = value
+                        break
             
             if not root_topic:
-                logger.warning("工作表中未找到根主题")
+                logger.warning(f"工作表{sheet_idx}中未找到根主题")
                 continue
                 
             # 提取层级结构
+            nodes_before = len(hierarchy)
             self._process_topic(root_topic, [], hierarchy, 0)
+            nodes_after = len(hierarchy)
+            logger.info(f"工作表{sheet_idx}提取了 {nodes_after - nodes_before} 个节点")
             
-        logger.info(f"从XMind数据中提取了 {len(hierarchy)} 个节点")
-        return hierarchy
+        # 过滤掉空节点和无效节点
+        valid_hierarchy = [node for node in hierarchy if node.get('title') and node.get('path')]
+        invalid_nodes = len(hierarchy) - len(valid_hierarchy)
+        
+        if invalid_nodes > 0:
+            logger.warning(f"过滤掉了 {invalid_nodes} 个无效节点")
+            
+        # 增加数据完整性检查
+        if valid_hierarchy:
+            logger.info(f"第一个有效节点: 标题='{valid_hierarchy[0].get('title')}', 层级={valid_hierarchy[0].get('level')}")
+            if len(valid_hierarchy) > 1:
+                logger.info(f"第二个有效节点: 标题='{valid_hierarchy[1].get('title')}', 层级={valid_hierarchy[1].get('level')}")
+        else:
+            logger.warning("没有提取到有效的节点数据")
+        
+        logger.info(f"从XMind数据中提取了 {len(valid_hierarchy)} 个有效节点")
+        return valid_hierarchy
         
     def _process_topic(self, topic: Dict, path: List[str], result: List[Dict], level: int):
         """递归处理主题，构建层级结构"""
         if not topic or not isinstance(topic, dict):
+            logger.debug(f"跳过无效主题: {type(topic)}")
             return
             
         title = topic.get('title', '').strip()
         if not title:
+            logger.debug("跳过无标题节点")
             return
             
         # 当前路径
@@ -182,6 +231,10 @@ class XMindToExcelConverter:
             'children': []
         }
         
+        # 记录一级节点信息
+        if level == 0:
+            logger.debug(f"添加一级节点: {title}")
+        
         result.append(node_info)
         
         # 递归处理子节点
@@ -195,6 +248,10 @@ class XMindToExcelConverter:
         elif 'topics' in topic and isinstance(topic['topics'], list):
             children = topic['topics']
         
+        # 记录子节点数量
+        if children:
+            logger.debug(f"节点 '{title}' 有 {len(children)} 个子节点")
+            
         for child in children:
             self._process_topic(child, current_path, result, level + 1)
     
@@ -202,7 +259,7 @@ class XMindToExcelConverter:
         """写入Excel表头"""
         headers = ['节点1', '节点2', '节点3', '节点4', '节点5', 
                   '端/API/服务', '冒烟结果', '研发对应负责人', 'showcase问题',
-                  '是否核心功能', '是否影响主流程', '执行时间']
+                  '是否核心功能', '是否影响主流程']
         
         for col, header in enumerate(headers, 1):
             cell = ws.cell(row=1, column=col, value=header)
@@ -231,17 +288,64 @@ class XMindToExcelConverter:
             写入的总行数
         """
         if not hierarchy_data:
+            logger.warning("没有数据可写入！")
             return start_row
             
+        # 调试日志
+        logger.info(f"开始写入数据，起始行：{start_row}，总节点数：{len(hierarchy_data)}")
+            
+        # 强制确保从起始行开始写入，不留空白
         current_row = start_row
         row_mappings = {}  # 用于存储行映射信息，辅助合并单元格
         
+        # 过滤掉任何可能的无效数据，确保数据质量
+        valid_data = [node for node in hierarchy_data if node.get('path') and len(node.get('path', [])) > 0]
+        
         # 将层级数据排序，确保相关节点连续
-        sorted_data = sorted(hierarchy_data, key=lambda x: '>'.join([str(i) for i in x['path']]))
+        sorted_data = sorted(valid_data, key=lambda x: '>'.join([str(i) for i in x['path']]))
+        
+        if not sorted_data:
+            logger.warning("没有有效的节点数据可写入")
+            return current_row
+            
+        logger.info(f"有效节点数：{len(sorted_data)}，将从第{current_row}行开始写入")
+        
+        # 修复：使用modules_processed计数器替代first_module标志，更可靠地跟踪模块处理状态
+        prev_module = None
+        modules_processed = 0  # 记录已处理的模块数量
         
         # 写入数据行
-        for node in sorted_data:
+        for index, node in enumerate(sorted_data):
+            # 跳过无效节点
+            if not node.get('path'):
+                logger.debug(f"跳过无效节点: {node.get('title', 'Unknown')}")
+                continue
+            
             level = min(node['level'], self.max_levels)
+            
+            # 识别当前模块（第一级节点）
+            current_module = node['path'][0] if node['path'] else None
+            if not current_module:
+                logger.debug(f"跳过无模块节点: {node.get('title', 'Unknown')}")
+                continue  # 跳过没有模块信息的节点
+            
+            # 详细的调试日志
+            if index == 0:
+                logger.info(f"写入第一个数据行 - 行号:{current_row}, 模块:{current_module}, 标题:{node.get('title')}, 路径:{node.get('path')}")
+            elif current_module != prev_module:
+                logger.info(f"模块变更: {prev_module} -> {current_module}, 当前行号: {current_row}")
+                
+                # 修复：仅在不是第一个模块的情况下添加空白行，避免在顶部添加不必要的空白行
+                if modules_processed > 0:  # 只有处理完第一个模块后才添加空白行
+                    self._write_empty_row(ws, current_row)
+                    current_row += 1
+                    logger.info(f"已添加模块分隔空行，新行号: {current_row}")
+                
+                # 增加已处理模块计数
+                modules_processed += 1
+                
+            # 记录当前模块
+            prev_module = current_module
             
             # 写入节点标题到对应的层级列
             for i in range(1, self.max_levels + 1):
@@ -280,13 +384,12 @@ class XMindToExcelConverter:
             
             # 写入其他业务列
             business_columns = {
-                6: self._get_service_api(node),           # 端/API/服务
-                7: "",                                    # 冒烟结果
-                8: "",                                    # 研发对应负责人
-                9: "",                                    # showcase问题
-                10: "是" if self._is_core_function(node) else "否",  # 是否核心功能
-                11: "是" if self._affects_main_flow(node) else "否",  # 是否影响主流程
-                12: "< 2分钟"                             # 执行时间
+                6: self._get_service_api(node),  # 端/API/服务
+                7: "",                           # 冒烟结果
+                8: "",                           # 研发对应负责人
+                9: "",                           # showcase问题
+                10: "",                          # 是否核心功能 - 设为空白
+                11: ""                           # 是否影响主流程 - 设为空白
             }
             
             for col, value in business_columns.items():
@@ -309,8 +412,14 @@ class XMindToExcelConverter:
             
             current_row += 1
         
+        # 应用增强的单元格合并前，检查行数据
+        logger.info(f"写入完成，总共写入了 {current_row - start_row} 行数据，从第 {start_row} 行到第 {current_row - 1} 行")
+        
         # 应用增强的单元格合并
         self._apply_enhanced_merges(ws, row_mappings)
+        
+        # 检查是否存在空白行并尝试清理
+        self._clean_empty_rows(ws, start_row, current_row)
         
         return current_row
     
@@ -542,8 +651,7 @@ class XMindToExcelConverter:
             8: 20,  # 研发对应负责人
             9: 20,  # showcase问题
             10: 15, # 是否核心功能
-            11: 15, # 是否影响主流程
-            12: 15  # 执行时间
+            11: 15  # 是否影响主流程
         }
         
         for col, width in column_widths.items():
@@ -579,6 +687,116 @@ class XMindToExcelConverter:
         # 设置列宽
         ws.column_dimensions['A'].width = 25
         ws.column_dimensions['B'].width = 50
+
+    def _write_empty_row(self, ws, row):
+        """
+        写入一个空白行，用于模块分隔
+        
+        Args:
+            ws: 工作表
+            row: 行号
+        """
+        # 获取当前表格的列数（11列，移除了执行时间列）
+        for col in range(1, 12):
+            cell = ws.cell(row=row, column=col, value="")
+            # 设置边框
+            cell.border = Border(
+                left=Side(style='thin', color='D4D4D4'),
+                right=Side(style='thin', color='D4D4D4'),
+                top=Side(style='thin', color='D4D4D4'),
+                bottom=Side(style='thin', color='D4D4D4')
+            )
+            # 添加轻微的背景色，使空白行更易识别
+            cell.fill = PatternFill(start_color='F9F9F9', end_color='F9F9F9', fill_type='solid')
+
+    def _clean_empty_rows(self, ws, start_row, end_row):
+        """
+        检查并清理不必要的空白行
+        
+        Args:
+            ws: 工作表
+            start_row: 起始行
+            end_row: 结束行
+        """
+        logger.info(f"检查空白行，范围：{start_row} - {end_row}")
+        
+        # 特别检查第2行（表头后的第一行数据）
+        if start_row == 2:
+            # 判断是否为空行的标准：前5列都为空
+            is_empty = True
+            for col in range(1, 6):
+                if ws.cell(row=2, column=col).value is not None:
+                    is_empty = False
+                    break
+                    
+            if is_empty:
+                logger.warning("检测到第2行是空白行，清除该行...")
+                for col in range(1, 12):  # 清除所有单元格内容和格式
+                    ws.cell(row=2, column=col).value = None
+                    ws.cell(row=2, column=col).fill = None
+                    ws.cell(row=2, column=col).border = None
+
+    def _remove_empty_rows(self, ws, start_row):
+        """
+        在保存前删除所有空白行
+        
+        Args:
+            ws: 工作表对象
+            start_row: 起始数据行
+        """
+        logger.info("检查并删除所有空白行")
+        
+        # 获取工作表的最大行数
+        max_row = ws.max_row
+        empty_rows = []
+        
+        # 修复：特别检查第一个数据行（第2行）
+        # 如果第一个数据行是空的，这可能是导致顶部空白行的主要原因
+        first_data_row_empty = True
+        for col in range(1, 12):
+            if ws.cell(row=start_row, column=col).value is not None:
+                first_data_row_empty = False
+                break
+                
+        if first_data_row_empty:
+            logger.warning(f"⚠️ 检测到第一个数据行（行{start_row}）是空白的！这会导致顶部出现空白行")
+            empty_rows.append(start_row)
+        
+        # 从起始行开始检查每一行
+        for row in range(start_row, max_row + 1):
+            is_empty = True
+            for col in range(1, 12):  # 检查所有列
+                if ws.cell(row=row, column=col).value is not None:
+                    is_empty = False
+                    break
+            
+            if is_empty:
+                empty_rows.append(row)
+                logger.info(f"发现空白行: {row}")
+        
+        # 从后向前删除空白行（避免索引变化问题）
+        if empty_rows:
+            logger.info(f"将删除 {len(empty_rows)} 个空白行: {empty_rows}")
+            for row in sorted(empty_rows, reverse=True):
+                ws.delete_rows(row)
+                logger.info(f"已删除空白行 {row}")
+                
+        # 修复：最后进行安全检查，确保所有空白行都被删除
+        remaining_empty_rows = []
+        for row in range(start_row, ws.max_row + 1):
+            is_empty = True
+            for col in range(1, 12):
+                if ws.cell(row=row, column=col).value is not None:
+                    is_empty = False
+                    break
+                    
+            if is_empty:
+                remaining_empty_rows.append(row)
+                
+        if remaining_empty_rows:
+            logger.warning(f"⚠️ 删除后仍有 {len(remaining_empty_rows)} 个空白行: {remaining_empty_rows}")
+        else:
+            logger.info("✅ 所有空白行已清理完毕")
 
 # 创建全局实例
 xmind_to_excel = XMindToExcelConverter() 

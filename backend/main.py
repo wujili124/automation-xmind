@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+"""
+XMind冒烟测试用例导出系统API
+"""
+
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -25,6 +30,7 @@ import xmindparser
 from excel_template_exporter import TemplateExcelExporter
 from hierarchical_excel_exporter import HierarchicalExcelExporter
 from enhanced_hierarchical_exporter import EnhancedHierarchicalExporter
+from xmind_to_excel_converter import xmind_to_excel
 
 # 配置日志
 logger = logging.getLogger()
@@ -563,6 +569,7 @@ async def export_with_enhanced_hierarchical_merge(request: ExportRequest):
     """
     增强版层级合并导出Excel（完美匹配模版的合并和视觉效果）
     在原有层级合并基础上进一步优化，实现更精确的模版匹配
+    现在直接使用XMind过滤器与XMind导出一致的数据流
     """
     try:
         logger.info(f"🚀 开始增强版层级合并导出，选中标识符: {request.selected_markers}")
@@ -574,62 +581,112 @@ async def export_with_enhanced_hierarchical_merge(request: ExportRequest):
         if not request.file_data:
             raise HTTPException(status_code=400, detail="缺少文件数据")
         
-        # 先生成标准的冒烟测试用例数据
-        smoke_cases = smoke_builder.build_smoke_cases(
-            request.selected_markers,
-            request.file_data
-        )
+        # 第1步：使用与XMind导出相同的过滤器处理数据（确保一致的数据流）
+        try:
+            filter_result = xmind_filter.filter_xmind_by_markers(
+                file_data=request.file_data,
+                selected_markers=request.selected_markers,
+                engine='lxml'
+            )
+            
+            logger.info(f"🔍 XMind过滤完成，处理统计: {filter_result['processing_details']}")
+            
+        except Exception as e:
+            logger.error(f"❌ XMind过滤失败: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"数据处理失败: {str(e)}")
         
-        total_cases = smoke_cases['smoke_test_suite']['metadata']['total_cases']
-        logger.info(f"生成 {total_cases} 个冒烟用例，开始转换为增强层级合并格式")
-        
-        # 使用增强版层级导出器生成Excel文件
+        # 第2步：将过滤后的XMind数据直接转换为Excel（而非重建结构）
         timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        output_filename = f"增强层级合并_冒烟测试用例_{timestamp}.xlsx"
+        output_filename = f"XMind结构化导出_冒烟测试用例_{timestamp}.xlsx"
         
-        # 生成Excel文件
-        file_path = enhanced_hierarchical_exporter.export_with_enhanced_merge(
-            smoke_cases,
-            output_filename
-        )
+        # 解析过滤后的XMind数据
+        filtered_data = None
+        try:
+            if 'content_json' in filter_result:
+                filtered_data = filter_result['content_json']
+            else:
+                # 提取过滤后的XMind内容
+                file_bytes = base64.b64decode(filter_result['file_data'])
+                with tempfile.NamedTemporaryFile(suffix='.xmind', delete=False) as temp_file:
+                    temp_file.write(file_bytes)
+                    temp_path = temp_file.name
+                
+                # 解压并读取content.json
+                with zipfile.ZipFile(temp_path, 'r') as zip_ref:
+                    with tempfile.TemporaryDirectory() as extract_dir:
+                        zip_ref.extractall(extract_dir)
+                        content_json_path = os.path.join(extract_dir, 'content.json')
+                        if os.path.exists(content_json_path):
+                            with open(content_json_path, 'r', encoding='utf-8') as f:
+                                filtered_data = json.load(f)
+                
+                # 清理临时文件
+                if 'temp_path' in locals() and os.path.exists(temp_path):
+                    os.unlink(temp_path)
+                    
+            if not filtered_data:
+                raise Exception("无法提取XMind数据结构")
+                
+            logger.info(f"🔄 成功提取过滤后的XMind数据结构，准备转换为Excel")
+            
+        except Exception as e:
+            logger.error(f"❌ 提取XMind数据结构失败: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"提取数据结构失败: {str(e)}")
         
-        # 读取生成的文件并转换为base64
-        with open(file_path, 'rb') as f:
-            excel_data = f.read()
-        
-        excel_base64 = base64.b64encode(excel_data).decode('utf-8')
-        
-        # 清理临时文件
-        os.remove(file_path)
-        
-        logger.info(f"✅ 增强版层级合并导出完成，文件大小: {len(excel_data):,} bytes")
-        
-        return {
-            "success": True,
-            "message": "增强版层级合并导出Excel成功",
-            "filename": output_filename,
-            "file_data": excel_base64,
-            "export_details": {
-                "total_cases": total_cases,
-                "selected_markers": request.selected_markers,
-                "export_format": "增强层级合并格式",
-                "features": [
-                    "精确单元格合并算法", 
-                    "完美匹配模版视觉", 
-                    "智能数据分组", 
-                    "增强业务逻辑", 
-                    "层级背景色优化",
-                    "精确列宽设置"
-                ],
-                "columns": ["节点1", "节点2", "节点3", "节点4", "节点5", "端/API/服务", "冒烟结果", "研发对应负责人", "showcase问题", "是否核心功能", "是否影响主流程", "执行时间"],
-                "improvements": [
-                    "更精确的合并算法",
-                    "完全匹配模版的背景色",
-                    "智能的业务逻辑判断",
-                    "增强的视觉层级效果"
-                ]
+        # 第3步：转换为Excel格式
+        try:
+            file_path = xmind_to_excel.convert_to_excel(
+                filtered_data,
+                output_filename
+            )
+            
+            # 读取生成的文件并转换为base64
+            with open(file_path, 'rb') as f:
+                excel_data = f.read()
+            
+            excel_base64 = base64.b64encode(excel_data).decode('utf-8')
+            
+            # 清理临时文件
+            os.remove(file_path)
+            
+            # 获取节点统计信息
+            node_count = filter_result['processing_details'].get('nodes_processed', 0)
+            sheets_processed = filter_result['processing_details'].get('sheets_processed', 0)
+            
+            logger.info(f"✅ 增强版层级合并导出完成，文件大小: {len(excel_data):,} bytes")
+            logger.info(f"📊 处理了 {sheets_processed} 个工作表，{node_count} 个节点")
+            
+            return {
+                "success": True,
+                "message": "增强版层级合并导出Excel成功",
+                "filename": output_filename,
+                "file_data": excel_base64,
+                "export_details": {
+                    "total_cases": node_count,
+                    "selected_markers": request.selected_markers,
+                    "export_format": "XMind结构化导出",
+                    "features": [
+                        "与XMind导出完全一致的数据流", 
+                        "精确保留原始结构",
+                        "智能单元格合并", 
+                        "层级背景色优化",
+                        "完整数据映射",
+                        "精确列宽设置"
+                    ],
+                    "processing_details": filter_result['processing_details'],
+                    "columns": ["节点1", "节点2", "节点3", "节点4", "节点5", "端/API/服务", "冒烟结果", "研发对应负责人", "showcase问题", "是否核心功能", "是否影响主流程", "执行时间"],
+                    "improvements": [
+                        "与XMind导出完全一致的数据处理",
+                        "不再使用中间解构重建流程",
+                        "直接转换确保完整性",
+                        "增强的视觉层级效果"
+                    ]
+                }
             }
-        }
+            
+        except Exception as e:
+            logger.error(f"❌ Excel转换失败: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"Excel转换失败: {str(e)}")
         
     except Exception as e:
         logger.error(f"❌ 增强版层级合并导出失败: {str(e)}")

@@ -365,6 +365,7 @@ const exportTestCases = async () => {
       {
         selected_markers: selectedMarkers.value,
         file_data: analysisData.value.file_data,
+        test_case_titles: testCasesTableData.value.map(tc => tc.title)
       },
       {
         timeout: 30000, // 30秒超时
@@ -457,6 +458,7 @@ const exportExcel = async () => {
       {
         selected_markers: selectedMarkers.value,
         file_data: analysisData.value.file_data,
+        test_case_titles: testCasesTableData.value.map(tc => tc.title)
       },
       {
         timeout: 30000, // 30秒超时

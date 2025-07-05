@@ -503,7 +503,7 @@ const exportExcel = async () => {
       const features = details?.features || [];
       
       ElMessage.success({
-        message: `🎉 增强层级合并Excel导出成功！\n✅ 数据行数: ${dataRows}行\n✅ 智能合并: ${mergedCount}个区域\n✅ 特性: ${features.slice(0, 2).join(", ")}`,
+        message: `🎉 增强层级合并Excel导出成功！`,
         duration: 8000,
         showClose: true
       });
@@ -703,7 +703,7 @@ const exportXMind = async () => {
       const targetMarkers = details?.target_markers?.join(", ") || "";
       
       ElMessage.success({
-        message: `XMind文件导出成功！\n基于标识符: [${targetMarkers}]\n删除节点: ${nodesRemoved}个\n压缩率: ${compressionRatio}`,
+        message: `XMind文件导出成功！压缩率: ${compressionRatio}`,
         duration: 6000,
         showClose: true
       });

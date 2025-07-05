@@ -16,7 +16,6 @@
         <el-descriptions title="文件概览" :column="2" border>
           <el-descriptions-item label="文件名">{{ analysisData.filename }}</el-descriptions-item>
           <el-descriptions-item label="总节点数">{{ analysisData.total_nodes }}</el-descriptions-item>
-          <el-descriptions-item label="适合冒烟测试">{{ analysisData.suitable_for_smoke }}</el-descriptions-item>
           <el-descriptions-item label="发现标识符">{{ analysisData.markers_found.length }} 种</el-descriptions-item>
         </el-descriptions>
       </div>

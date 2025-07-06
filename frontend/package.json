@@ -80,9 +80,7 @@
           "**/*",
           "!**/__pycache__/**",
           "!**/.pytest_cache/**",
-          "!**/python_env/miniconda/{pkgs,shell,conda-meta,include}/**/*",
-          "!**/venv/{include,lib,share}/**/*",
-          "!**/venv/bin/!(python|python.exe)"
+          "!**/python_env/miniconda/{pkgs,shell,conda-meta,include}/**/*"
         ]
       },
       {

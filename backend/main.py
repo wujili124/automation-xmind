@@ -3,79 +3,103 @@
 XMind冒烟测试用例导出系统API
 """
 
-from fastapi import FastAPI, UploadFile, File, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
-from typing import List, Dict, Any, Optional
-import uvicorn
-import logging
-import base64
-import io
-import json
-import zipfile
-import shutil
-import tempfile
 import os
-from pathlib import Path
-from datetime import datetime
-from pythonjsonlogger import jsonlogger
 import sys
+import logging
+import traceback
+from pathlib import Path
 
-from xmind_parser import XMindAnalyzer
-from smoke_case_builder import SmokeCaseBuilder
-from xmind_marker_filter import xmind_filter
-import xmindparser
-from excel_template_exporter import TemplateExcelExporter
-from hierarchical_excel_exporter import HierarchicalExcelExporter
-from enhanced_hierarchical_exporter import EnhancedHierarchicalExporter
-from xmind_to_excel_converter import xmind_to_excel
-
-# 检测是否在Electron环境中运行
-is_electron = os.environ.get('ELECTRON_RUN') == '1'
+# 添加当前目录到Python路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
 
 # 配置日志
 logger = logging.getLogger()
 logHandler = logging.StreamHandler(sys.stdout)
-formatter = jsonlogger.JsonFormatter()
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 logHandler.setFormatter(formatter)
 logger.addHandler(logHandler)
 logger.setLevel(logging.INFO)
 
+# 检测是否在Electron环境中运行
+is_electron = os.environ.get('ELECTRON_RUN') == '1'
 logger.info(f"启动环境: {'Electron' if is_electron else '标准'}")
 
-# 创建FastAPI应用
-app = FastAPI(
-    title="XMind冒烟测试用例导出工具",
-    description="上传XMind文件，分析标识符，导出冒烟测试用例",
-    version="1.0.0"
-)
+try:
+    from fastapi import FastAPI, UploadFile, File, HTTPException
+    from fastapi.middleware.cors import CORSMiddleware
+    from fastapi.responses import FileResponse
+    from fastapi.staticfiles import StaticFiles
+    from pydantic import BaseModel
+    from typing import List, Dict, Any, Optional
+    import uvicorn
+    import base64
+    import io
+    import json
+    import zipfile
+    import shutil
+    import tempfile
+    from datetime import datetime
 
-# 挂载静态文件（前端构建产物）
-if os.path.exists("static"):
-    app.mount("/static", StaticFiles(directory="static"), name="static")
+    # 创建FastAPI应用
+    app = FastAPI(
+        title="XMind冒烟测试用例导出工具",
+        description="上传XMind文件，分析标识符，导出冒烟测试用例",
+        version="1.0.0"
+    )
 
-# 配置CORS - 允许所有来源
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",  # 开发环境
-        "https://*.vercel.app",   # Vercel预览环境
-        "http://localhost:8000",  # Electron环境
-        os.getenv("FRONTEND_URL", "*")  # 生产环境前端URL
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+    # 挂载静态文件（前端构建产物）
+    if os.path.exists("static"):
+        app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# 初始化分析器和构建器
-xmind_analyzer = XMindAnalyzer()
-smoke_builder = SmokeCaseBuilder()
-template_exporter = TemplateExcelExporter()
-hierarchical_exporter = HierarchicalExcelExporter()
-enhanced_hierarchical_exporter = EnhancedHierarchicalExporter()
+    # 配置CORS - 允许所有来源
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            "http://localhost:5173",  # 开发环境
+            "https://*.vercel.app",   # Vercel预览环境
+            "http://localhost:8000",  # Electron环境
+            os.getenv("FRONTEND_URL", "*")  # 生产环境前端URL
+        ],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    # 初始化分析器和构建器
+    try:
+        from xmind_parser import XMindAnalyzer
+        from smoke_case_builder import SmokeCaseBuilder
+        from excel_template_exporter import TemplateExcelExporter
+        from hierarchical_excel_exporter import HierarchicalExcelExporter
+        from enhanced_hierarchical_exporter import EnhancedHierarchicalExporter
+        from xmind_to_excel_converter import xmind_to_excel
+        from xmind_marker_filter import xmind_filter
+        import xmindparser
+
+        xmind_analyzer = XMindAnalyzer()
+        smoke_builder = SmokeCaseBuilder()
+        template_exporter = TemplateExcelExporter()
+        hierarchical_exporter = HierarchicalExcelExporter()
+        enhanced_hierarchical_exporter = EnhancedHierarchicalExporter()
+
+        logger.info("后端服务初始化完成")
+
+    except ImportError as e:
+        logger.error(f"模块导入失败: {str(e)}")
+        logger.error(f"Python路径: {sys.path}")
+        logger.error(f"当前目录: {os.getcwd()}")
+        logger.error(f"详细错误信息: {traceback.format_exc()}")
+        sys.exit(1)
+
+except Exception as e:
+    logger.error(f"后端服务初始化失败: {str(e)}")
+    logger.error(f"详细错误信息: {traceback.format_exc()}")
+    sys.exit(1)
 
 # 数据模型
 class ExportRequest(BaseModel):
@@ -101,11 +125,7 @@ class TestDataRequest(BaseModel):
 @app.get("/health")
 async def health_check():
     """健康检查端点"""
-    return {
-        "status": "healthy",
-        "timestamp": datetime.now().isoformat(),
-        "version": "1.0.0"
-    }
+    return {"status": "ok"}
 
 @app.get("/")
 async def read_root():
@@ -705,25 +725,20 @@ def create_xmind_metadata(build_path: Path):
     # 这个函数现在不再需要，因为我们直接复制原始文件的元数据
 
 def start_server():
-    """启动服务器函数"""
-    # 在Electron环境中使用固定端口和仅本地访问
-    if is_electron:
-        port = 8000
-        host = "127.0.0.1"
-    else:
-        port = int(os.getenv("PORT", 8000))
-        host = os.getenv("HOST", "0.0.0.0")
-    
-    log_level = os.getenv("LOG_LEVEL", "info")
-    
-    logger.info(f"Starting server on {host}:{port} (Electron: {is_electron})")
-    uvicorn.run(
-        app, 
-        host=host, 
-        port=port, 
-        log_level=log_level
-    )
+    """启动FastAPI服务器"""
+    try:
+        logger.info("正在启动XMind冒烟测试用例导出工具API服务器...")
+        uvicorn.run(
+            app,
+            host="127.0.0.1",
+            port=8000,
+            log_level="info",
+            access_log=True
+        )
+    except Exception as e:
+        logger.error(f"服务器启动失败: {str(e)}")
+        logger.error(f"详细错误信息: {traceback.format_exc()}")
+        sys.exit(1)
 
 if __name__ == "__main__":
-    logger.info("🚀 正在启动XMind冒烟测试用例导出工具API服务器...")
     start_server() 

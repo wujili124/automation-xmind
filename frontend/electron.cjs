@@ -62,82 +62,129 @@ function startPythonBackend() {
       const errorMsg = '未找到Python可执行文件，无法启动后端服务';
       console.error(errorMsg);
       
-      // 显示错误但继续尝试启动应用
-      dialog.showMessageBox({
-        type: 'warning',
-        title: '后端启动警告',
-        message: '未找到Python可执行文件，应用可能无法正常工作',
-        detail: `应用将继续启动，但某些功能可能不可用。`,
-        buttons: ['继续']
-      });
+      // 显示错误对话框
+      dialog.showErrorBox('后端启动失败', 
+        '未找到Python可执行文件，应用无法正常工作。\n\n' +
+        '请确保以下任一条件满足：\n' +
+        '1. Python虚拟环境完整（包含所有依赖）\n' +
+        '2. 系统安装了Python 3.8或更高版本\n' +
+        '\n详细错误：找不到可用的Python环境'
+      );
       
-      resolve(); // 即使没找到Python也继续
+      reject(new Error(errorMsg));
       return;
     }
     
     console.log(`使用 ${pythonInfo.pythonType} 类型的Python: ${pythonInfo.executablePath}`);
-    console.log(`后端目录: ${pythonInfo.backendDir}`);
     
-    // 根据Python类型启动后端
-    if (pythonInfo.pythonType === 'pyinstaller') {
-      // PyInstaller打包的独立可执行文件
-      pythonProcess = spawn(pythonInfo.executablePath, [], {
-        cwd: pythonInfo.backendDir,
-        env: { ...process.env, ELECTRON_RUN: '1' }
-      });
-    } else {
-      // 其他类型的Python (venv, miniconda, system)
-      if (!pythonInfo.mainScript || !fs.existsSync(pythonInfo.mainScript)) {
-        console.error(`主脚本不存在: ${pythonInfo.mainScript}`);
-        
-        dialog.showMessageBox({
-          type: 'warning',
-          title: '后端启动警告',
-          message: '找不到Python主脚本',
-          detail: `未找到: ${pythonInfo.mainScript}\n应用将继续启动，但某些功能可能不可用。`,
-          buttons: ['继续']
-        });
-        
-        resolve();
+    // 检查Python环境
+    const checkPythonEnv = spawn(pythonInfo.executablePath, ['-c', 'import fastapi, uvicorn, lxml']);
+    checkPythonEnv.on('error', (err) => {
+      console.error('Python环境检查失败:', err);
+      dialog.showErrorBox('后端启动失败', 
+        '无法启动Python环境。\n\n' +
+        '错误原因：\n' +
+        `${err.message}\n\n` +
+        '请确保Python环境中安装了所有必要的依赖。'
+      );
+      reject(err);
+    });
+    
+    checkPythonEnv.on('exit', (code) => {
+      if (code !== 0) {
+        console.error(`Python环境检查失败，退出码: ${code}`);
+        dialog.showErrorBox('后端启动失败',
+          'Python环境缺少必要的依赖。\n\n' +
+          '请确保以下Python包已正确安装：\n' +
+          '- fastapi\n' +
+          '- uvicorn\n' +
+          '- lxml'
+        );
+        reject(new Error(`Python环境检查失败，退出码: ${code}`));
         return;
       }
       
-      // 启动Python进程
-      pythonProcess = spawn(pythonInfo.executablePath, [pythonInfo.mainScript], {
-        cwd: pythonInfo.backendDir,
-        env: { ...process.env, ELECTRON_RUN: '1' }
+      // 启动后端服务
+      const pythonProcess = spawn(pythonInfo.executablePath, [
+        path.join(pythonInfo.backendDir, 'main.py')
+      ], {
+        env: { ...process.env, ELECTRON_RUN: '1' },
+        cwd: pythonInfo.backendDir  // 设置工作目录为后端目录
       });
-    }
-    
-    // 处理Python进程输出
-    pythonProcess.stdout.on('data', (data) => {
-      console.log(`Python stdout: ${data}`);
-      if (data.toString().includes('正在启动XMind冒烟测试用例导出工具API服务器') ||
-          data.toString().includes('Application startup complete')) {
-        console.log('Python backend started successfully');
-        resolve();
-      }
+      
+      // 收集Python进程的输出
+      let pythonOutput = '';
+      
+      pythonProcess.stdout.on('data', (data) => {
+        const output = data.toString();
+        pythonOutput += output;
+        console.log(`Python后端输出: ${output}`);
+      });
+      
+      pythonProcess.stderr.on('data', (data) => {
+        const error = data.toString();
+        pythonOutput += error;
+        console.error(`Python后端错误: ${error}`);
+      });
+      
+      pythonProcess.on('error', (error) => {
+        console.error(`Python进程启动失败: ${error.message}`);
+        dialog.showErrorBox('后端启动失败', 
+          '无法启动Python后端进程。\n\n' +
+          '错误信息：\n' +
+          error.message + '\n\n' +
+          '请检查Python环境是否正确安装。'
+        );
+        reject(error);
+      });
+      
+      pythonProcess.on('exit', (code, signal) => {
+        if (code !== 0) {
+          console.error(`Python进程异常退出，退出码: ${code}, 信号: ${signal}`);
+          console.error('Python输出:', pythonOutput);
+          
+          dialog.showErrorBox('后端启动失败', 
+            'Python后端服务异常退出。\n\n' +
+            `退出码: ${code}\n` +
+            `信号: ${signal || 'none'}\n\n` +
+            '详细输出：\n' +
+            pythonOutput
+          );
+          
+          reject(new Error(`Python进程异常退出，退出码: ${code}`));
+        }
+      });
+      
+      // 等待后端服务启动
+      let retries = 30;  // 最多等待30秒
+      const checkBackend = async () => {
+        try {
+          const response = await fetch('http://127.0.0.1:8000/health');
+          if (response.ok) {
+            console.log('后端服务启动成功');
+            resolve();
+          } else {
+            throw new Error(`健康检查失败: ${response.status}`);
+          }
+        } catch (error) {
+          if (retries > 0) {
+            retries--;
+            setTimeout(checkBackend, 1000);
+          } else {
+            console.error('后端服务启动超时');
+            dialog.showErrorBox('后端启动失败', 
+              '后端服务启动超时。\n\n' +
+              '详细输出：\n' +
+              pythonOutput
+            );
+            reject(new Error('后端服务启动超时'));
+          }
+        }
+      };
+      
+      // 开始检查后端服务
+      setTimeout(checkBackend, 1000);
     });
-    
-    pythonProcess.stderr.on('data', (data) => {
-      console.error(`Python stderr: ${data}`);
-    });
-    
-    pythonProcess.on('error', (error) => {
-      console.error(`Failed to start Python process: ${error}`);
-      reject(error);
-    });
-    
-    pythonProcess.on('close', (code) => {
-      console.log(`Python process exited with code ${code}`);
-      pythonProcess = null;
-    });
-    
-    // 设置超时，避免无限等待
-    setTimeout(() => {
-      console.log('Python backend startup timeout reached, continuing anyway');
-      resolve(); // 即使没看到特定输出也继续
-    }, 5000);
   });
 }
 

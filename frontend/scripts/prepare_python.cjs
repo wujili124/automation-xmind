@@ -72,86 +72,81 @@ async function checkPythonInstallation() {
 }
 
 /**
- * 创建虚拟环境
+ * 创建Python虚拟环境
  */
 async function createVirtualEnv() {
-  // 确保目录存在
-  if (!fs.existsSync(pythonEnvDir)) {
-    fs.mkdirSync(pythonEnvDir, { recursive: true });
-  }
-  
   console.log(`创建Python虚拟环境: ${venvDir}`);
   
-  // 如果已存在虚拟环境，先删除
+  // 如果虚拟环境已存在，先删除
   if (fs.existsSync(venvDir)) {
     console.log('删除已存在的虚拟环境...');
     fs.rmSync(venvDir, { recursive: true, force: true });
   }
   
-  // 创建虚拟环境
-  try {
-    await runCommand(pythonCommand, ['-m', 'venv', venvDir]);
-    console.log('虚拟环境创建成功');
-  } catch (err) {
-    console.error('创建虚拟环境失败:', err.message);
-    throw err;
-  }
-}
-
-/**
- * 安装依赖
- */
-async function installDependencies() {
+  // 创建虚拟环境，使用--copies选项创建独立的Python解释器副本
+  await runCommand(pythonCommand, ['-m', 'venv', '--copies', venvDir]);
+  console.log('虚拟环境创建成功');
+  
+  // 安装依赖
   console.log('安装Python依赖...');
   
-  // 虚拟环境中的pip路径
-  const pipPath = isWindows 
-    ? path.join(venvDir, 'Scripts', 'pip')
-    : path.join(venvDir, 'bin', 'pip');
+  // 在Windows上使用不同的激活命令
+  const activateCmd = isWindows ? 
+    `${venvDir}\\Scripts\\activate.bat && ` :
+    `source "${venvDir}/bin/activate" && `;
   
-  // 确保requirements.txt存在
-  if (!fs.existsSync(requirementsPath)) {
-    console.error(`找不到requirements.txt: ${requirementsPath}`);
-    
-    // 创建一个基本的requirements.txt
-    const basicRequirements = 
-      'fastapi==0.109.2\n' +
-      'uvicorn==0.27.1\n' +
-      'python-multipart==0.0.9\n' +
-      'python-json-logger==2.0.7\n' +
-      'openpyxl==3.1.2\n' +
-      'jinja2==3.1.3\n';
-    
-    fs.writeFileSync(requirementsPath, basicRequirements);
-    console.log(`创建了基本的requirements.txt: ${requirementsPath}`);
+  // 获取虚拟环境中的Python和pip路径
+  const venvPython = isWindows ? 
+    path.join(venvDir, 'Scripts', 'python.exe') :
+    path.join(venvDir, 'bin', 'python3');
+  
+  const venvPip = isWindows ? 
+    path.join(venvDir, 'Scripts', 'pip.exe') :
+    path.join(venvDir, 'bin', 'pip3');
+  
+  // 先升级pip
+  if (isWindows) {
+    await runCommand('cmd', ['/c', `${activateCmd} ${venvPip} install --upgrade pip`]);
+  } else {
+    await runCommand('bash', ['-c', `${activateCmd} ${venvPip} install --upgrade pip`]);
+  }
+  
+  // 安装wheel（避免某些包安装失败）
+  if (isWindows) {
+    await runCommand('cmd', ['/c', `${activateCmd} ${venvPip} install wheel`]);
+  } else {
+    await runCommand('bash', ['-c', `${activateCmd} ${venvPip} install wheel`]);
   }
   
   // 安装依赖
-  try {
-    // 使用虚拟环境中的pip安装依赖
-    const activateCmd = isWindows 
-      ? path.join(venvDir, 'Scripts', 'activate')
-      : `. "${path.join(venvDir, 'bin', 'activate')}"`;
-    
-    if (isWindows) {
-      // Windows上使用cmd.exe执行激活命令
-      await runCommand('cmd.exe', [
-        '/c', 
-        `${activateCmd} && ${pipPath} install -r "${requirementsPath}"`
-      ], { shell: true });
-    } else {
-      // macOS/Linux上使用bash执行激活命令
-      await runCommand('bash', [
-        '-c', 
-        `${activateCmd} && ${pipPath} install -r "${requirementsPath}"`
-      ]);
-    }
-    
-    console.log('依赖安装完成');
-  } catch (err) {
-    console.error('安装依赖失败:', err.message);
-    throw err;
+  if (isWindows) {
+    await runCommand('cmd', ['/c', `${activateCmd} ${venvPip} install -r "${requirementsPath}"`]);
+  } else {
+    await runCommand('bash', ['-c', `${activateCmd} ${venvPip} install -r "${requirementsPath}"`]);
   }
+  console.log('依赖安装完成');
+  
+  // 验证安装
+  console.log('验证依赖安装...');
+  const verifyCmd = isWindows ?
+    `${activateCmd} ${venvPython} -c "import fastapi, uvicorn, lxml"` :
+    `${activateCmd} ${venvPython} -c 'import fastapi, uvicorn, lxml'`;
+  
+  try {
+    if (isWindows) {
+      await runCommand('cmd', ['/c', verifyCmd]);
+    } else {
+      await runCommand('bash', ['-c', verifyCmd]);
+    }
+    console.log('依赖验证成功');
+  } catch (err) {
+    console.error('依赖验证失败:', err);
+    throw new Error('Python依赖安装验证失败');
+  }
+  
+  // 创建环境准备标记
+  fs.writeFileSync(path.join(pythonEnvDir, '.ready'), 'ready');
+  console.log(`创建环境准备标记: ${path.join(pythonEnvDir, '.ready')}`);
 }
 
 /**
@@ -178,9 +173,6 @@ async function main() {
     
     // 创建虚拟环境
     await createVirtualEnv();
-    
-    // 安装依赖
-    await installDependencies();
     
     // 创建准备完成标记
     createReadyFlag();

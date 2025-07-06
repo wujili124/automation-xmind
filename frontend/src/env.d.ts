@@ -15,7 +15,7 @@ declare module '*.vue' {
   export default component
 }
 
-// Electron API 类型定义
+// 后端状态类型定义
 interface BackendStatus {
   status: 'online' | 'offline' | 'error' | 'timeout' | 'unknown'
   error?: string
@@ -23,6 +23,7 @@ interface BackendStatus {
   checked?: boolean
 }
 
+// Electron API 类型定义
 interface ElectronAPI {
   getApiBaseUrl: () => Promise<string>
   checkBackendStatus: () => Promise<BackendStatus>
@@ -30,7 +31,7 @@ interface ElectronAPI {
 
 // 扩展Window接口，添加electronAPI属性
 interface Window {
-  electronAPI: ElectronAPI
+  electronAPI?: ElectronAPI
 }
 
 // 解决VLS相关错误的声明

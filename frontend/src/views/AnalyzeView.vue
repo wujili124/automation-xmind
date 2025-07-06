@@ -162,7 +162,7 @@ onMounted(async () => {
   isElectron.value = window.electronAPI !== undefined
   
   // 如果在Electron环境中，从主进程获取API URL
-  if (isElectron.value) {
+  if (isElectron.value && window.electronAPI) {
     try {
       API_BASE_URL.value = await window.electronAPI.getApiBaseUrl()
       console.log('在Electron环境中运行，API基础URL:', API_BASE_URL.value)

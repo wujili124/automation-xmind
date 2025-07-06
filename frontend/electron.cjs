@@ -43,8 +43,9 @@ try {
 // 正确引入 findPythonExecutable 函数
 const { findPythonExecutable } = require(pythonFinderPath);
 
-// 保存Python进程的引用
+// 保存Python进程的引用和端口号
 let pythonProcess = null;
+let pythonPort = null;
 let mainWindow = null;
 
 // 启动Python后端
@@ -105,7 +106,7 @@ function startPythonBackend() {
       }
       
       // 启动后端服务
-      const pythonProcess = spawn(pythonInfo.executablePath, [
+      pythonProcess = spawn(pythonInfo.executablePath, [
         path.join(pythonInfo.backendDir, 'main.py')
       ], {
         env: { ...process.env, ELECTRON_RUN: '1' },
@@ -155,35 +156,61 @@ function startPythonBackend() {
         }
       });
       
-      // 等待后端服务启动
+      // 等待端口文件出现并读取端口号
+      const portFile = path.join(pythonInfo.backendDir, '.port');
       let retries = 30;  // 最多等待30秒
-      const checkBackend = async () => {
-        try {
-          const response = await fetch('http://127.0.0.1:8000/health');
-          if (response.ok) {
-            console.log('后端服务启动成功');
-            resolve();
-          } else {
-            throw new Error(`健康检查失败: ${response.status}`);
+      
+      const checkPort = () => {
+        if (fs.existsSync(portFile)) {
+          try {
+            pythonPort = parseInt(fs.readFileSync(portFile, 'utf8').trim());
+            console.log(`Python后端使用端口: ${pythonPort}`);
+            
+            // 测试端口连接
+            fetch(`http://127.0.0.1:${pythonPort}/health`)
+              .then(response => {
+                if (response.ok) {
+                  console.log('后端服务启动成功');
+                  resolve();
+                } else {
+                  throw new Error(`健康检查失败: ${response.status}`);
+                }
+              })
+              .catch(error => {
+                if (retries > 0) {
+                  retries--;
+                  setTimeout(checkPort, 1000);
+                } else {
+                  console.error('后端服务启动超时');
+                  dialog.showErrorBox('后端启动失败', 
+                    '后端服务启动超时。\n\n' +
+                    '详细输出：\n' +
+                    pythonOutput
+                  );
+                  reject(new Error('后端服务启动超时'));
+                }
+              });
+          } catch (error) {
+            console.error(`读取端口文件失败: ${error}`);
+            if (retries > 0) {
+              retries--;
+              setTimeout(checkPort, 1000);
+            } else {
+              reject(new Error('读取端口文件失败'));
+            }
           }
-        } catch (error) {
+        } else {
           if (retries > 0) {
             retries--;
-            setTimeout(checkBackend, 1000);
+            setTimeout(checkPort, 1000);
           } else {
-            console.error('后端服务启动超时');
-            dialog.showErrorBox('后端启动失败', 
-              '后端服务启动超时。\n\n' +
-              '详细输出：\n' +
-              pythonOutput
-            );
-            reject(new Error('后端服务启动超时'));
+            reject(new Error('等待端口文件超时'));
           }
         }
       };
       
-      // 开始检查后端服务
-      setTimeout(checkBackend, 1000);
+      // 开始检查端口
+      setTimeout(checkPort, 1000);
     });
   });
 }
@@ -306,9 +333,9 @@ app.on('quit', () => {
   }
 });
 
-// 处理IPC通信
+// 获取API基础URL的IPC处理器
 ipcMain.handle('get-api-base-url', () => {
-  return 'http://127.0.0.1:8000'; // 返回API基础URL，使用IP地址而不是localhost
+  return `http://127.0.0.1:${pythonPort}`;
 });
 
 // 检查后端是否可访问

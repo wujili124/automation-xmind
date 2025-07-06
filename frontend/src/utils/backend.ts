@@ -19,6 +19,7 @@ export async function initializeBackend() {
   try {
     // 获取API基础URL
     API_BASE_URL = await window.electronAPI!.getApiBaseUrl()
+    console.log('获取到API基础URL:', API_BASE_URL)
     
     // 检查后端状态
     const status = await checkBackendStatus()
@@ -60,7 +61,12 @@ export async function checkBackendStatus(): Promise<BackendStatus> {
   
   // 在Electron环境中，使用IPC通信
   try {
-    return await window.electronAPI!.checkBackendStatus()
+    // 获取最新的API URL
+    API_BASE_URL = await window.electronAPI!.getApiBaseUrl()
+    
+    // 检查连接
+    await axios.get(`${API_BASE_URL}/health`, { timeout: 3000 })
+    return { status: 'online' }
   } catch (error) {
     return {
       status: 'error',

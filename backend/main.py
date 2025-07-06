@@ -724,14 +724,33 @@ def create_xmind_metadata(build_path: Path):
     """
     # 这个函数现在不再需要，因为我们直接复制原始文件的元数据
 
+def find_free_port():
+    """查找可用端口"""
+    import socket
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(('', 0))
+        s.listen(1)
+        port = s.getsockname()[1]
+    return port
+
 def start_server():
     """启动FastAPI服务器"""
     try:
         logger.info("正在启动XMind冒烟测试用例导出工具API服务器...")
+        
+        # 查找可用端口
+        port = find_free_port()
+        logger.info(f"使用端口: {port}")
+        
+        # 将端口写入临时文件，供Electron读取
+        port_file = os.path.join(os.path.dirname(__file__), '.port')
+        with open(port_file, 'w') as f:
+            f.write(str(port))
+        
         uvicorn.run(
             app,
             host="127.0.0.1",
-            port=8000,
+            port=port,
             log_level="info",
             access_log=True
         )
@@ -739,6 +758,10 @@ def start_server():
         logger.error(f"服务器启动失败: {str(e)}")
         logger.error(f"详细错误信息: {traceback.format_exc()}")
         sys.exit(1)
+    finally:
+        # 清理端口文件
+        if os.path.exists(port_file):
+            os.remove(port_file)
 
 if __name__ == "__main__":
     start_server() 

@@ -82,7 +82,7 @@ function createWindow() {
   // 加载应用
   const startUrl = isDev 
     ? 'http://localhost:5173' // 开发环境使用Vite服务
-    : `file://${path.join(__dirname, 'dist/index.html')}`; // 生产环境使用构建后的文件
+    : `file://${path.join(process.resourcesPath, 'dist/index.html')}`; // 生产环境使用构建后的文件
   
   mainWindow.loadURL(startUrl);
   

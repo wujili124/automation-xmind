@@ -5,8 +5,29 @@
         <div class="card-header">
           <h2>XMind 冒烟测试用例导出工具</h2>
           <p>请上传您的XMind文件进行分析</p>
+          
+          <!-- 后端连接状态显示 -->
+          <div class="backend-status" v-if="isElectron">
+            <el-tag :type="backendStatus.status === 'online' ? 'success' : 'danger'" size="small">
+              后端状态: {{ backendStatus.status === 'online' ? '已连接' : '未连接' }}
+              <el-button v-if="backendStatus.status !== 'online'" link type="primary" @click="checkBackend">
+                重试
+              </el-button>
+            </el-tag>
+          </div>
         </div>
       </template>
+      
+      <!-- 错误提示 -->
+      <el-alert
+        v-if="backendStatus.status !== 'online' && backendStatus.checked"
+        :title="`后端连接失败: ${backendStatus.error || '未知错误'}`"
+        type="error"
+        description="请确认Python后端是否已启动，或重启应用尝试重新连接。"
+        show-icon
+        closable
+        style="margin: 10px 20px 0;"
+      />
       
       <el-upload
         ref="uploadRef"
@@ -56,6 +77,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
 import type { UploadInstance, UploadFile, UploadFiles } from 'element-plus'
 import axios from 'axios'
+import { initializeBackend, checkBackendStatus, getApiBaseUrl } from '../utils/backend'
 
 const router = useRouter()
 const uploadRef = ref<UploadInstance>()
@@ -63,24 +85,61 @@ const selectedFile = ref<File | null>(null)
 const uploading = ref(false)
 
 // API基础URL
-const API_BASE_URL = ref('http://localhost:8000')
+const API_BASE_URL = ref(getApiBaseUrl())
 
 // 检测是否在Electron环境中运行
 const isElectron = ref(false)
 
-onMounted(async () => {
-  // 检查是否在Electron环境中
-  isElectron.value = window.electronAPI !== undefined
-  
-  // 如果在Electron环境中，从主进程获取API URL
-  if (isElectron.value) {
-    try {
-      API_BASE_URL.value = await window.electronAPI.getApiBaseUrl()
-      console.log('在Electron环境中运行，API基础URL:', API_BASE_URL.value)
-    } catch (error) {
-      console.error('获取API基础URL失败:', error)
+// 后端状态
+const backendStatus = ref<BackendStatus>({
+  status: 'unknown',
+  error: '',
+  checked: false
+})
+
+// 检查后端状态
+const checkBackend = async () => {
+  try {
+    const status = await checkBackendStatus()
+    backendStatus.value = {
+      ...status,
+      checked: true
+    }
+    
+    console.log('后端状态:', backendStatus.value)
+    
+    if (backendStatus.value.status !== 'online') {
+      ElMessage.warning('后端服务未连接，应用可能无法正常工作')
+    }
+  } catch (error) {
+    console.error('检查后端状态失败:', error)
+    backendStatus.value = {
+      status: 'error',
+      error: '检查后端状态失败',
+      checked: true
     }
   }
+}
+
+onMounted(async () => {
+  // 初始化后端连接
+  const backend = await initializeBackend()
+  isElectron.value = backend.isElectron
+  API_BASE_URL.value = backend.apiUrl
+  
+  if (backend.status) {
+    backendStatus.value = {
+      ...backend.status,
+      checked: true
+    }
+    
+    // 显示后端状态提示
+    if (backendStatus.value.status !== 'online') {
+      ElMessage.warning('后端服务未连接，应用可能无法正常工作')
+    }
+  }
+  
+  console.log('后端初始化完成:', backend)
 })
 
 const handleFileChange = (file: UploadFile, files: UploadFiles) => {
@@ -107,6 +166,34 @@ const uploadFile = async () => {
   if (selectedFile.value.size > 10 * 1024 * 1024) {
     ElMessage.error('文件大小不能超过10MB')
     return
+  }
+  
+  // 检查后端连接状态
+  if (isElectron.value && backendStatus.value.status !== 'online') {
+    // 重新检查后端状态
+    await checkBackend()
+    
+    // 如果仍然无法连接
+    if (backendStatus.value.status === 'offline' || 
+        backendStatus.value.status === 'error' || 
+        backendStatus.value.status === 'timeout' || 
+        backendStatus.value.status === 'unknown') {
+      ElMessageBox.confirm(
+        '后端服务未连接，无法分析文件。是否尝试重新连接？',
+        '连接错误',
+        {
+          confirmButtonText: '重试连接',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).then(() => {
+        // 用户选择重试
+        checkBackend()
+      }).catch(() => {
+        // 用户取消
+      })
+      return
+    }
   }
   
   uploading.value = true
@@ -433,5 +520,22 @@ const formatDate = (timestamp: number): string => {
     0 2px 6px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
   transition: all 0.3s ease;
+}
+
+/* 后端状态标签 */
+.backend-status {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+/* 调整el-tag样式以匹配设计 */
+:deep(.el-tag) {
+  border-radius: 12px;
+  padding: 2px 10px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 </style> 

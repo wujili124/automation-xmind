@@ -17,18 +17,22 @@ export default defineConfig({
   },
   // 为Electron构建配置
   base: './',
-  build: {
-    outDir: 'dist',
-    emptyOutDir: true,
-    rollupOptions: {
-      output: {
-        manualChunks: (id) => {
-          // 将第三方库分块，提高加载性能
-          if (id.includes('node_modules')) {
-            return 'vendor';
-          }
+// ... existing code ...
+build: {
+  outDir: 'dist',
+  emptyOutDir: true,
+  assetsDir: 'assets',
+  rollupOptions: {
+    output: {
+      manualChunks: (id) => {
+        if (id.includes('node_modules')) {
+          return 'vendor';
         }
-      }
+      },
+      entryFileNames: 'assets/[name]-[hash].js',
+      chunkFileNames: 'assets/[name]-[hash].js',
+      assetFileNames: 'assets/[name]-[hash].[ext]'
     }
   }
+}
 })

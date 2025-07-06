@@ -20,7 +20,17 @@
     "electron:build": "vite build && electron-builder",
     "electron:build:win": "vite build && electron-builder --win",
     "electron:build:mac": "vite build && electron-builder --mac",
-    "electron:build:linux": "vite build && electron-builder --linux"
+    "electron:build:linux": "vite build && electron-builder --linux",
+    "prepare:python": "node scripts/prepare_python.cjs",
+    "build:python:exe": "node scripts/build_python_executable.cjs",
+    "build:complete": "npm run prepare:python && npm run build && electron-builder",
+    "configure:platform": "node scripts/configure-platform.cjs",
+    "configure:mac": "node scripts/macos-config.cjs",
+    "configure:win": "node scripts/windows-config.cjs",
+    "build:mac": "npm run configure:mac && npm run prepare:python && npm run build && electron-builder --mac",
+    "build:win": "npm run configure:win && npm run prepare:python && npm run build && electron-builder --win",
+    "prepare:build": "node scripts/prepare-build.cjs",
+    "build:all": "npm run prepare:build && npm run build:complete"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
@@ -58,7 +68,9 @@
     "files": [
       "dist/**/*",
       "electron.cjs",
-      "preload.cjs"
+      "preload.cjs",
+      "scripts/**/*",
+      "index.html"
     ],
     "extraResources": [
       {
@@ -67,28 +79,43 @@
         "filter": [
           "**/*",
           "!**/__pycache__/**",
-          "!**/.venv/**",
-          "!**/venv/**"
+          "!**/.pytest_cache/**",
+          "!**/python_env/miniconda/{pkgs,shell,conda-meta,include}/**/*",
+          "!**/venv/{include,lib,share}/**/*",
+          "!**/venv/bin/!(python|python.exe)"
         ]
+      },
+      {
+        "from": "scripts",
+        "to": "scripts"
       }
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "dist/**/*",
+      "scripts/**/*"
     ],
     "win": {
       "target": [
         "nsis"
-      ],
-      "icon": "public/favicon.ico"
+      ]
     },
     "mac": {
       "target": [
         "dmg"
       ],
-      "icon": "public/favicon.ico"
+      "category": "public.app-category.developer-tools",
+      "darkModeSupport": true,
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "/Users/tal/Desktop/project/automation-xmind/frontend/scripts/entitlements.mac.plist",
+      "entitlementsInherit": "/Users/tal/Desktop/project/automation-xmind/frontend/scripts/entitlements.mac.plist"
     },
     "linux": {
       "target": [
         "AppImage"
-      ],
-      "icon": "public/favicon.ico"
-    }
+      ]
+    },
+    "publish": null
   }
 }

@@ -607,13 +607,15 @@ const exportExcelTraditional = () => {
     // 创建汇总信息工作表
     const summaryData = [
       ["项目", "值"],
-      ["源文件", exportResult.value.smoke_test_suite.metadata.source_file],
+      ["源文件", exportResult.value?.smoke_test_suite?.metadata?.source_file || 'N/A'],
       [
         "导出时间",
-        new Date(exportResult.value.smoke_test_suite.metadata.export_time).toLocaleString("zh-CN"),
+        exportResult.value?.smoke_test_suite?.metadata?.export_time 
+          ? new Date(exportResult.value.smoke_test_suite.metadata.export_time).toLocaleString("zh-CN") 
+          : 'N/A',
       ],
-      ["选中标识符", exportResult.value.smoke_test_suite.metadata.selected_markers.join(", ")],
-      ["总用例数", exportResult.value.smoke_test_suite.metadata.total_cases],
+      ["选中标识符", exportResult.value?.smoke_test_suite?.metadata?.selected_markers?.join(", ") || 'N/A'],
+      ["总用例数", exportResult.value?.smoke_test_suite?.metadata?.total_cases || 0],
       ["", ""],
       ["标识符统计", ""],
       ["P1 (高优先级)", excelData.filter((item) => item["优先级"] === "P1").length],

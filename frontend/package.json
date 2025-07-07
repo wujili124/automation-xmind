@@ -100,8 +100,9 @@
     },
     "mac": {
       "target": [
-        "dmg"
+        "dir"
       ],
+      "icon": "src/assets/app-logo.png",
       "category": "public.app-category.developer-tools",
       "darkModeSupport": true,
       "hardenedRuntime": true,

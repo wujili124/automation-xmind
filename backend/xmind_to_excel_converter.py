@@ -237,8 +237,10 @@ class XMindToExcelConverter:
         row_mappings = {}  # 用于存储行映射信息，辅助合并单元格
         
         # 将层级数据排序，确保相关节点连续
-        sorted_data = sorted(hierarchy_data, key=lambda x: '>'.join([str(i) for i in x['path']]))
-        
+        # sorted_data = sorted(hierarchy_data, key=lambda x: '>'.join([str(i) for i in x['path']]))
+        # 过滤掉任何可能的无效数据，确保数据质量
+        valid_data = [node for node in hierarchy_data if node.get('path') and len(node.get('path', [])) > 0]
+        sorted_data = valid_data
         # 写入数据行
         for node in sorted_data:
             level = min(node['level'], self.max_levels)

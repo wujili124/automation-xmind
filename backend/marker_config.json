@@ -1,0 +1,299 @@
+{
+  "markers": [
+    {
+      "symbol": "重要 (红色叹号)",
+      "markerId": "important",
+      "category": "重要性",
+      "icon": "❗"
+    },
+    {
+      "symbol": "优先级1 (红色1)",
+      "markerId": "priority-1",
+      "category": "优先级",
+      "icon": "1️⃣"
+    },
+    {
+      "symbol": "优先级2 (橙色2)",
+      "markerId": "priority-2",
+      "category": "优先级",
+      "icon": "2️⃣"
+    },
+    {
+      "symbol": "优先级3 (黄色3)",
+      "markerId": "priority-3",
+      "category": "优先级",
+      "icon": "3️⃣"
+    },
+    {
+      "symbol": "优先级4 (绿色4)",
+      "markerId": "priority-4",
+      "category": "优先级",
+      "icon": "4️⃣"
+    },
+    {
+      "symbol": "优先级5 (蓝色5)",
+      "markerId": "priority-5",
+      "category": "优先级",
+      "icon": "5️⃣"
+    },
+    {
+      "symbol": "优先级6 (紫色6)",
+      "markerId": "priority-6",
+      "category": "优先级",
+      "icon": "6️⃣"
+    },
+    {
+      "symbol": "优先级7 (灰色7)",
+      "markerId": "priority-7",
+      "category": "优先级",
+      "icon": "7️⃣"
+    },
+    {
+      "symbol": "优先级8 (灰色8)",
+      "markerId": "priority-8",
+      "category": "优先级",
+      "icon": "8️⃣"
+    },
+    {
+      "symbol": "优先级9 (灰色9)",
+      "markerId": "priority-9",
+      "category": "优先级",
+      "icon": "9️⃣"
+    },
+    {
+      "symbol": "是",
+      "markerId": "yes",
+      "category": "标记",
+      "icon": "✅"
+    },
+    {
+      "symbol": "否",
+      "markerId": "no",
+      "category": "标记",
+      "icon": "❌"
+    },
+    {
+      "symbol": "对号",
+      "markerId": "check",
+      "category": "标记",
+      "icon": "✓"
+    },
+    {
+      "symbol": "叉号",
+      "markerId": "cross",
+      "category": "标记",
+      "icon": "✗"
+    },
+    {
+      "symbol": "半对号",
+      "markerId": "half-check",
+      "category": "标记",
+      "icon": "✓"
+    },
+    {
+      "symbol": "问号",
+      "markerId": "question",
+      "category": "标记",
+      "icon": "❓"
+    },
+    {
+      "symbol": "感叹号",
+      "markerId": "exclamation",
+      "category": "标记",
+      "icon": "❗"
+    },
+    {
+      "symbol": "信息",
+      "markerId": "info",
+      "category": "标记",
+      "icon": "ℹ️"
+    },
+    {
+      "symbol": "注意",
+      "markerId": "attention",
+      "category": "标记",
+      "icon": "⚠️"
+    },
+    {
+      "symbol": "错误",
+      "markerId": "error",
+      "category": "标记",
+      "icon": "⛔"
+    },
+    {
+      "symbol": "暂停",
+      "markerId": "pause",
+      "category": "状态",
+      "icon": "⏸️"
+    },
+    {
+      "symbol": "停止",
+      "markerId": "stop",
+      "category": "状态",
+      "icon": "⏹️"
+    },
+    {
+      "symbol": "运行",
+      "markerId": "running",
+      "category": "状态",
+      "icon": "▶️"
+    },
+    {
+      "symbol": "等待",
+      "markerId": "waiting",
+      "category": "状态",
+      "icon": "⏳"
+    },
+    {
+      "symbol": "完成",
+      "markerId": "done",
+      "category": "状态",
+      "icon": "✅"
+    },
+    {
+      "symbol": "进行中",
+      "markerId": "in-progress",
+      "category": "状态",
+      "icon": "🔄"
+    },
+    {
+      "symbol": "未开始",
+      "markerId": "not-started",
+      "category": "状态",
+      "icon": "⭕"
+    },
+    {
+      "symbol": "延迟",
+      "markerId": "delayed",
+      "category": "状态",
+      "icon": "⏰"
+    },
+    {
+      "symbol": "风险",
+      "markerId": "risk",
+      "category": "风险",
+      "icon": "🔴"
+    },
+    {
+      "symbol": "高风险",
+      "markerId": "high-risk",
+      "category": "风险",
+      "icon": "🔴"
+    },
+    {
+      "symbol": "中风险",
+      "markerId": "medium-risk",
+      "category": "风险",
+      "icon": "🟠"
+    },
+    {
+      "symbol": "低风险",
+      "markerId": "low-risk",
+      "category": "风险",
+      "icon": "🟡"
+    },
+    {
+      "symbol": "无风险",
+      "markerId": "no-risk",
+      "category": "风险",
+      "icon": "🟢"
+    },
+    {
+      "symbol": "星标",
+      "markerId": "star",
+      "category": "标记",
+      "icon": "⭐"
+    },
+    {
+      "symbol": "旗标",
+      "markerId": "flag",
+      "category": "标记",
+      "icon": "🚩"
+    },
+    {
+      "symbol": "人物",
+      "markerId": "people",
+      "category": "对象",
+      "icon": "👤"
+    },
+    {
+      "symbol": "时钟",
+      "markerId": "clock",
+      "category": "时间",
+      "icon": "🕒"
+    },
+    {
+      "symbol": "日历",
+      "markerId": "calendar",
+      "category": "时间",
+      "icon": "📅"
+    },
+    {
+      "symbol": "邮件",
+      "markerId": "email",
+      "category": "通信",
+      "icon": "📧"
+    },
+    {
+      "symbol": "电话",
+      "markerId": "phone",
+      "category": "通信",
+      "icon": "📞"
+    }
+  ],
+  "mappings": {
+    "priority1": "priority-1",
+    "priority2": "priority-2",
+    "priority3": "priority-3",
+    "priority4": "priority-4",
+    "priority5": "priority-5",
+    "priority6": "priority-6",
+    "priority7": "priority-7",
+    "priority8": "priority-8",
+    "priority9": "priority-9",
+    "p1": "priority-1",
+    "p2": "priority-2",
+    "p3": "priority-3",
+    "p4": "priority-4",
+    "p5": "priority-5",
+    "p6": "priority-6",
+    "p7": "priority-7",
+    "p8": "priority-8",
+    "p9": "priority-9",
+    "tick": "check",
+    "checked": "check",
+    "unchecked": "cross",
+    "wrong": "cross",
+    "warning": "attention",
+    "alert": "attention",
+    "information": "info",
+    "pending": "waiting",
+    "blocked": "stop",
+    "completed": "done",
+    "finished": "done",
+    "started": "in-progress",
+    "ongoing": "in-progress",
+    "notstarted": "not-started",
+    "todo": "not-started",
+    "delayed": "delayed",
+    "late": "delayed",
+    "highrisk": "high-risk",
+    "mediumrisk": "medium-risk",
+    "lowrisk": "low-risk",
+    "norisk": "no-risk",
+    "high": "high-risk",
+    "medium": "medium-risk",
+    "low": "low-risk",
+    "none": "no-risk",
+    "testmarker": "important"
+  },
+  "custom_markers": [
+    {
+      "markerId": "custom-test",
+      "symbol": "测试标识符",
+      "category": "测试",
+      "icon": "🔖",
+      "isCustom": true
+    }
+  ]
+}

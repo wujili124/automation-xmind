@@ -73,6 +73,7 @@ try:
     # 初始化分析器和构建器
     try:
         from xmind_parser import XMindAnalyzer
+        from xmind_analyzer_adapter import XMindAnalyzerAdapter  # 导入适配器
         from smoke_case_builder import SmokeCaseBuilder
         from excel_template_exporter import TemplateExcelExporter
         from hierarchical_excel_exporter import HierarchicalExcelExporter
@@ -81,7 +82,9 @@ try:
         from xmind_marker_filter import xmind_filter
         import xmindparser
 
-        xmind_analyzer = XMindAnalyzer()
+        # 使用适配器替换原始分析器
+        # xmind_analyzer = XMindAnalyzer()
+        xmind_analyzer = XMindAnalyzerAdapter(use_enhanced=True)  # 默认使用增强版分析器
         smoke_builder = SmokeCaseBuilder()
         template_exporter = TemplateExcelExporter()
         hierarchical_exporter = HierarchicalExcelExporter()

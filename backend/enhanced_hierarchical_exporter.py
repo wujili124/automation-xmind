@@ -117,7 +117,7 @@ class EnhancedHierarchicalExporter:
         processed_cases = []
         skipped_count = 0
         
-        for case in test_cases:
+        for case_idx, case in enumerate(test_cases):
             # 1. 数据完整性检查
             if not self._is_valid_test_case(case):
                 skipped_count += 1
@@ -137,6 +137,11 @@ class EnhancedHierarchicalExporter:
             processed_case['parsed_nodes'] = cleaned_nodes
             processed_case['sort_key'] = ' > '.join(cleaned_nodes)  # 用于排序
             processed_case['cleaned_path'] = ' > '.join(cleaned_nodes)  # 清理后的路径
+            
+            # 确保xmind_index存在
+            if 'xmind_index' not in processed_case:
+                processed_case['xmind_index'] = case_idx * 1000  # 使用索引作为默认值
+            
             processed_cases.append(processed_case)
         
         if skipped_count > 0:
@@ -183,7 +188,8 @@ class EnhancedHierarchicalExporter:
                         'nodes': nodes.copy(),
                         'level': level + 1,
                         'data': case,
-                        'full_path': ' > '.join(full_path)
+                        'full_path': ' > '.join(full_path),
+                        'xmind_index': case.get('xmind_index', case_idx * 1000)  # 确保xmind_index存在
                     }
                     row_mappings.append(row_info)
                 
@@ -343,13 +349,16 @@ class EnhancedHierarchicalExporter:
         
         current_row = start_row
         
+        # 按照XMind中的原始顺序索引排序，确保节点顺序与XMind完全一致
+        xmind_sorted_mappings = sorted(row_mappings, key=lambda x: x.get('xmind_index', 0))
+        
         # 写入所有数据行
-        for row_info in row_mappings:
+        for row_info in xmind_sorted_mappings:
             self._write_enhanced_single_row(ws, current_row, row_info)
             current_row += 1
         
         # 应用智能合并
-        self._apply_enhanced_merges(ws, hierarchy, row_mappings, start_row)
+        self._apply_enhanced_merges(ws, hierarchy, xmind_sorted_mappings, start_row)
         
         return current_row
     

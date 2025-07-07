@@ -301,8 +301,10 @@ class XMindToExcelConverter:
         # 过滤掉任何可能的无效数据，确保数据质量
         valid_data = [node for node in hierarchy_data if node.get('path') and len(node.get('path', [])) > 0]
         
-        # 将层级数据排序，确保相关节点连续
-        sorted_data = sorted(valid_data, key=lambda x: '>'.join([str(i) for i in x['path']]))
+        # 保留原始顺序，不进行额外排序
+        # 原来的排序方式会导致节点顺序与XMind中的不一致
+        # sorted_data = sorted(valid_data, key=lambda x: '>'.join([str(i) for i in x['path']]))
+        sorted_data = valid_data
         
         if not sorted_data:
             logger.warning("没有有效的节点数据可写入")

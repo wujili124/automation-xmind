@@ -4,20 +4,11 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 
-// Element Plus
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+// 为了支持组件内使用ElMessage等方法
+import 'element-plus/es/components/message/style/css'
+import 'element-plus/es/components/message-box/style/css'
 
 const app = createApp(App)
-
-// 注册Element Plus
-app.use(ElementPlus)
-
-// 注册所有Element Plus图标
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-  app.component(key, component)
-}
 
 app.use(router)
 

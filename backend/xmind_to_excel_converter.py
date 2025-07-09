@@ -34,7 +34,7 @@ class XMindToExcelConverter:
         self.business_column_color = 'F2F2F2'  # 业务列浅灰色
         
         # 最大支持的节点层级
-        self.max_levels = 5
+        self.max_levels = 10
         
     def convert_to_excel(self, xmind_data: Dict, output_path: str = None) -> str:
         """
@@ -648,6 +648,11 @@ class XMindToExcelConverter:
             3: 30,  # 节点3
             4: 30,  # 节点4
             5: 30,  # 节点5
+            6: 30,  # 节点6
+            7: 30,  # 节点7
+            8: 30,  # 节点8
+            9: 30,  # 节点9
+            10: 30, # 节点10
             6: 20,  # 端/API/服务
             7: 15,  # 冒烟结果
             8: 20,  # 研发对应负责人

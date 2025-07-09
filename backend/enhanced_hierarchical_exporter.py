@@ -25,7 +25,12 @@ class EnhancedHierarchicalExporter:
             2: 'D9E2F3',  # 节点2 - 更浅蓝色
             3: 'E8F1F9',  # 节点3 - 极浅蓝色
             4: 'F0F8FF',  # 节点4 - 接近白色
-            5: 'FFFFFF'   # 节点5 - 白色
+            5: 'FFFFFF',  # 节点5 - 白色
+            6: 'FFFFFF',  # 节点6 - 白色
+            7: 'FFFFFF',  # 节点7 - 白色
+            8: 'FFFFFF',  # 节点8 - 白色
+            9: 'FFFFFF',  # 节点9 - 白色
+            10: 'FFFFFF'  # 节点10 - 白色
         }
         
         # 其他列的背景色
@@ -265,8 +270,8 @@ class EnhancedHierarchicalExporter:
                 return []  # 完全无效的路径
         
         # 限制最大层级深度
-        if len(cleaned_nodes) > 5:
-            cleaned_nodes = cleaned_nodes[:5]
+        if len(cleaned_nodes) > 10:
+            cleaned_nodes = cleaned_nodes[:10]
         
         return cleaned_nodes
     
@@ -330,7 +335,7 @@ class EnhancedHierarchicalExporter:
     def _write_enhanced_headers(self, ws):
         """写入优化的表头 - 删除执行时间列"""
         headers = [
-            '节点1', '节点2', '节点3', '节点4', '节点5',
+            '节点1', '节点2', '节点3', '节点4', '节点5', '节点6', '节点7', '节点8', '节点9', '节点10',
             '端/API/服务', '冒烟结果', '研发对应负责人', 'showcase问题',
             '是否核心功能', '是否影响主流程'
         ]
@@ -369,13 +374,13 @@ class EnhancedHierarchicalExporter:
         case_data = row_info['data']
         
         # 写入节点列 (1-5列) - 精确的层级效果
-        for col in range(1, 6):
+        for col in range(1, 11):
             if col <= len(nodes):
                 value = nodes[col-1]
                 level = col
             else:
                 value = ''
-                level = 5
+                level = 10
             
             cell = ws.cell(row=row, column=col, value=value)
             
@@ -394,7 +399,7 @@ class EnhancedHierarchicalExporter:
             cell.alignment = Alignment(horizontal='left', vertical='center', wrap_text=True)
             cell.border = self._get_border()
         
-        # 写入业务列 (6-11列) - 显示为空白，删除执行时间列
+        # 写入业务列 (11-16列) - 显示为空白，删除执行时间列
         business_data = [
             '',  # 端/API/服务 - 空白
             '',  # 冒烟结果 - 空白
@@ -404,7 +409,7 @@ class EnhancedHierarchicalExporter:
             ''   # 是否影响主流程 - 空白
         ]
         
-        for col, value in enumerate(business_data, 6):
+        for col, value in enumerate(business_data, 11):
             cell = ws.cell(row=row, column=col, value=value)
             cell.alignment = Alignment(horizontal='left', vertical='center', wrap_text=True)
             cell.fill = PatternFill(start_color=self.business_column_color, end_color=self.business_column_color, fill_type='solid')
@@ -451,7 +456,7 @@ class EnhancedHierarchicalExporter:
         merge_regions = []
         
         # 按列计算合并区域
-        for col in range(1, 6):  # 节点1-5列
+        for col in range(1, 11):  # 节点1-10列
             # 使用层级信息计算合并，但要验证数据完整性
             current_row = start_row
             self._calculate_column_merges_enhanced(hierarchy, col, current_row, merge_regions, row_mappings, start_row)
@@ -598,12 +603,17 @@ class EnhancedHierarchicalExporter:
             'C': 25.0,   # 节点3
             'D': 20.0,   # 节点4
             'E': 20.0,   # 节点5
-            'F': 15.0,   # 端/API/服务
-            'G': 12.0,   # 冒烟结果
-            'H': 18.0,   # 研发对应负责人
-            'I': 20.0,   # showcase问题
-            'J': 14.0,   # 是否核心功能
-            'K': 14.0    # 是否影响主流程
+            'F': 20.0,   # 节点6
+            'G': 20.0,   # 节点7
+            'H': 20.0,   # 节点8
+            'I': 20.0,   # 节点9
+            'J': 20.0,   # 节点10
+            'K': 15.0,   # 端/API/服务
+            'L': 12.0,   # 冒烟结果
+            'M': 18.0,   # 研发对应负责人
+            'N': 20.0,   # showcase问题
+            'O': 14.0,   # 是否核心功能
+            'P': 14.0    # 是否影响主流程
         }
         
         # 设置列宽

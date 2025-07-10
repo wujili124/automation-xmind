@@ -7,6 +7,12 @@
 
 一个智能化的XMind思维导图转冒烟测试用例工具，支持标识符识别、智能层级合并和多格式导出。现在支持作为Electron桌面应用运行！
  ![alt text](image.png)
+
+ <!-- 指导用户如何处理"无法打开应用，因为来自身份不明的开发者"提示 -->
+ xattr -dr com.apple.quarantine /path/to/yourapp.app
+<!-- 确保Python解释器和脚本有执行权限： -->
+chmod +x resources/backend/python_env/venv/bin/python
+
 ## ✨ 核心功能特性
 
 ### 🎯 智能分析

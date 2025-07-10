@@ -373,7 +373,7 @@ class EnhancedHierarchicalExporter:
         nodes = row_info['nodes']
         case_data = row_info['data']
         
-        # 写入节点列 (1-5列) - 精确的层级效果
+        # 写入节点列 (1-10列) - 精确的层级效果
         for col in range(1, 11):
             if col <= len(nodes):
                 value = nodes[col-1]

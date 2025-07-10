@@ -25,7 +25,12 @@ class HierarchicalExcelExporter:
             2: 'E8F1F9',  # 节点2 - 中蓝色  
             3: 'F0F8FF',  # 节点3 - 浅蓝色
             4: 'F8FBFF',  # 节点4 - 极浅蓝
-            5: 'FFFFFF'   # 节点5 - 白色
+            5: 'FFFFFF',  # 节点5 - 白色
+            6: 'FFFFFF',  # 节点6 - 白色
+            7: 'FFFFFF',  # 节点7 - 白色
+            8: 'FFFFFF',  # 节点8 - 白色
+            9: 'FFFFFF',  # 节点9 - 白色
+            10: 'FFFFFF'  # 节点10 - 白色
         }
         
         # 其他列的背景色
@@ -134,7 +139,7 @@ class HierarchicalExcelExporter:
     def _write_headers(self, ws):
         """写入表头"""
         headers = [
-            '节点1', '节点2', '节点3', '节点4', '节点5',
+            '节点1', '节点2', '节点3', '节点4', '节点5', '节点6', '节点7', '节点8', '节点9', '节点10',
             '端/API/服务', '冒烟结果', '研发对应负责人', 'showcase问题',
             '是否核心功能', '是否影响主流程', '执行时间'
         ]
@@ -194,14 +199,14 @@ class HierarchicalExcelExporter:
     def _write_single_row(self, ws, row: int, row_info: Dict):
         """写入单行数据"""
         
-        # 写入节点列 (1-5列)
-        for col in range(1, 6):
+        # 写入节点列 (1-10列)
+        for col in range(1, 11):
             if col <= len(row_info['path_values']):
                 value = row_info['path_values'][col-1]
                 level = col
             else:
                 value = ''
-                level = 5
+                level = 10
             
             cell = ws.cell(row=row, column=col, value=value)
             
@@ -213,7 +218,7 @@ class HierarchicalExcelExporter:
             cell.alignment = Alignment(horizontal='left', vertical='center')
             cell.border = self._get_border()
         
-        # 写入其他业务列 (6-12列)
+        # 写入业务列 (11-17列)
         case_data = row_info['data']
         business_data = [
             self._determine_platform(case_data),        # 端/API/服务
@@ -225,14 +230,14 @@ class HierarchicalExcelExporter:
             case_data.get('执行时间', '< 2分钟')          # 执行时间
         ]
         
-        for col, value in enumerate(business_data, 6):
+        for col, value in enumerate(business_data, 11):
             cell = ws.cell(row=row, column=col, value=value)
             cell.alignment = Alignment(horizontal='left', vertical='center')
             cell.fill = PatternFill(start_color=self.other_column_color, end_color=self.other_column_color, fill_type='solid')
             cell.border = self._get_border()
             
             # 冒烟结果特殊颜色
-            if col == 7:  # 冒烟结果列
+            if col == 12:  # 冒烟结果列
                 if value == '通过':
                     cell.fill = PatternFill(start_color='E8F5E8', end_color='E8F5E8', fill_type='solid')
                 elif value == '需关注':
@@ -244,7 +249,7 @@ class HierarchicalExcelExporter:
         """应用智能合并"""
         
         # 按列分别处理合并
-        for col in range(1, 6):  # 只对节点列进行合并
+        for col in range(1, 11):  # 对所有节点列进行合并
             self._merge_column(ws, all_rows, col, start_row)
     
     def _merge_column(self, ws, all_rows: List, col: int, start_row: int):
@@ -319,13 +324,18 @@ class HierarchicalExcelExporter:
             'C': 25.0,  # 节点3
             'D': 20.0,  # 节点4
             'E': 20.0,  # 节点5
-            'F': 15.0,  # 端/API/服务
-            'G': 12.0,  # 冒烟结果
-            'H': 15.0,  # 研发对应负责人
-            'I': 20.0,  # showcase问题
-            'J': 12.0,  # 是否核心功能
-            'K': 12.0,  # 是否影响主流程
-            'L': 12.0   # 执行时间
+            'F': 20.0,  # 节点6
+            'G': 20.0,  # 节点7
+            'H': 20.0,  # 节点8
+            'I': 20.0,  # 节点9
+            'J': 20.0,  # 节点10
+            'K': 15.0,  # 端/API/服务
+            'L': 12.0,  # 冒烟结果
+            'M': 15.0,  # 研发对应负责人
+            'N': 20.0,  # showcase问题
+            'O': 12.0,  # 是否核心功能
+            'P': 12.0,  # 是否影响主流程
+            'Q': 12.0   # 执行时间
         }
         
         for col_letter, width in column_widths.items():

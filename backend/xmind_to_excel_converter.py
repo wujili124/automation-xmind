@@ -80,11 +80,14 @@ class XMindToExcelConverter:
             ws_main = wb.active
             ws_main.title = "冒烟测试用例"
             
-            # 写入表头
-            self._write_headers(ws_main)
-            
-            # 从XMind结构中提取层级数据并写入Excel
+            # 从XMind结构中提取层级数据
             hierarchy_data = self._extract_hierarchy(sheets)
+            
+            # 确定实际使用的最大节点层级
+            max_used_level = self._determine_max_used_level(hierarchy_data)
+            
+            # 写入动态表头
+            self._write_headers(ws_main, max_used_level)
             
             # 确保数据从第2行开始写入（第1行是表头）
             start_row = 2
@@ -104,7 +107,7 @@ class XMindToExcelConverter:
             total_rows = self._write_data(ws_main, hierarchy_data, start_row)
             
             # 设置列宽
-            self._set_column_widths(ws_main, total_rows)
+            self._set_column_widths(ws_main, total_rows, max_used_level)
             
             # 创建汇总表
             ws_summary = wb.create_sheet("导出汇总")
@@ -255,11 +258,52 @@ class XMindToExcelConverter:
         for child in children:
             self._process_topic(child, current_path, result, level + 1)
     
-    def _write_headers(self, ws):
-        """写入Excel表头"""
-        headers = ['节点1', '节点2', '节点3', '节点4', '节点5', 
-                  '端/API/服务', '冒烟结果', '研发对应负责人', 'showcase问题',
-                  '是否核心功能', '是否影响主流程']
+    def _determine_max_used_level(self, hierarchy_data: List[Dict]) -> int:
+        """
+        确定数据中实际使用的最大节点层级
+        
+        Args:
+            hierarchy_data: 层级结构数据
+            
+        Returns:
+            实际使用的最大层级数（1-10之间）
+        """
+        if not hierarchy_data:
+            return 1  # 如果没有数据，默认显示第一层
+            
+        # 找出所有节点中的最大层级
+        max_level = 1
+        for node in hierarchy_data:
+            level = node.get('level', 1)
+            if level > max_level:
+                max_level = level
+        
+        # 确保结果在1-10之间
+        max_level = max(1, min(max_level, self.max_levels))
+        logger.info(f"数据中的最大节点层级为: {max_level}")
+        return max_level
+    
+    def _write_headers(self, ws, max_used_level=None):
+        """
+        写入Excel表头，根据实际数据动态调整节点列数量
+        
+        Args:
+            ws: 工作表对象
+            max_used_level: 实际使用的最大节点层级，如果为None则显示所有10层
+        """
+        # 如果未指定最大层级，则默认显示所有层级
+        if max_used_level is None:
+            max_used_level = self.max_levels
+            
+        # 动态生成节点列表头
+        node_headers = [f'节点{i}' for i in range(1, max_used_level + 1)]
+        
+        # 业务列表头保持不变
+        business_headers = ['端/API/服务', '冒烟结果', '研发对应负责人', 'showcase问题',
+                           '是否核心功能', '是否影响主流程']
+        
+        # 合并所有表头
+        headers = node_headers + business_headers
         
         for col, header in enumerate(headers, 1):
             cell = ws.cell(row=1, column=col, value=header)
@@ -316,6 +360,9 @@ class XMindToExcelConverter:
         prev_module = None
         modules_processed = 0  # 记录已处理的模块数量
         
+        # 确定实际使用的最大节点层级
+        max_used_level = self._determine_max_used_level(hierarchy_data)
+        
         # 写入数据行
         for index, node in enumerate(sorted_data):
             # 跳过无效节点
@@ -339,7 +386,7 @@ class XMindToExcelConverter:
                 
                 # 修复：仅在不是第一个模块的情况下添加空白行，避免在顶部添加不必要的空白行
                 if modules_processed > 0:  # 只有处理完第一个模块后才添加空白行
-                    self._write_empty_row(ws, current_row)
+                    self._write_empty_row(ws, current_row, max_used_level)
                     current_row += 1
                     logger.info(f"已添加模块分隔空行，新行号: {current_row}")
                 
@@ -351,6 +398,9 @@ class XMindToExcelConverter:
             
             # 写入节点标题到对应的层级列
             for i in range(1, self.max_levels + 1):
+                if i > max_used_level:
+                    break  # 不写入超过最大使用层级的列
+                    
                 if i == level:
                     # 在当前节点级别写入标题
                     cell = ws.cell(row=current_row, column=i, value=node['title'])
@@ -384,14 +434,14 @@ class XMindToExcelConverter:
                             bottom=Side(style='thin', color='D4D4D4')
                         )
             
-            # 写入其他业务列
+            # 写入其他业务列 - 使用动态列索引
             business_columns = {
-                6: self._get_service_api(node),  # 端/API/服务
-                7: "",                           # 冒烟结果
-                8: "",                           # 研发对应负责人
-                9: "",                           # showcase问题
-                10: "",                          # 是否核心功能 - 设为空白
-                11: ""                           # 是否影响主流程 - 设为空白
+                max_used_level + 1: self._get_service_api(node),  # 端/API/服务
+                max_used_level + 2: "",                           # 冒烟结果
+                max_used_level + 3: "",                           # 研发对应负责人
+                max_used_level + 4: "",                           # showcase问题
+                max_used_level + 5: "",                           # 是否核心功能 - 设为空白
+                max_used_level + 6: ""                            # 是否影响主流程 - 设为空白
             }
             
             for col, value in business_columns.items():
@@ -590,26 +640,64 @@ class XMindToExcelConverter:
             )
     
     def _get_service_api(self, node: Dict) -> str:
-        """从节点信息中提取服务/API信息"""
-        # 从标题或备注中识别API/服务信息
-        title = node.get('title', '').lower()
-        notes = node.get('notes', '').lower()
+        """
+        从节点信息中提取服务/API信息
         
-        # 检查API关键词
-        api_keywords = ['api', '接口', 'service', '服务', 'endpoint', '微服务']
-        for keyword in api_keywords:
-            if keyword in title:
-                return node.get('title', '')
+        更精确地提取API/服务信息，避免错误地将普通节点标题作为业务列的值
+        """
+        # 从标题或备注中识别API/服务信息，确保处理None值
+        title = node.get('title', '') or ''
+        notes = node.get('notes', '') or ''
         
-        # 从备注中提取
+        # 仅当标题明确表示这是一个API或服务时才返回标题
+        title_lower = title.lower()
+        
+        # 更严格的API关键词匹配
+        strict_api_keywords = [
+            'api:', 'api：', 'api ', 'api-', 
+            '接口:', '接口：', '接口 ', 
+            'service:', 'service：', 'service ', 
+            '服务:', '服务：', '服务 ', 
+            'endpoint:', 'endpoint：', 'endpoint ',
+            '微服务:', '微服务：', '微服务 '
+        ]
+        
+        # 检查标题是否明确标识为API/服务
+        for keyword in strict_api_keywords:
+            if keyword in title_lower:
+                # 如果标题明确表示这是API/服务，提取冒号后面的内容或整个标题
+                if ':' in keyword or '：' in keyword:
+                    parts = title.split(':', 1) if ':' in title else title.split('：', 1)
+                    if len(parts) > 1:
+                        return parts[1].strip()
+                return title.strip()
+        
+        # 从备注中提取API信息
         if notes:
-            lines = notes.split('\n')
+            notes_lower = notes.lower()
+            lines = notes_lower.split('\n')
+            
+            # 在备注中查找API相关行
+            api_line = None
             for line in lines:
                 line = line.strip()
-                for keyword in api_keywords:
+                for keyword in strict_api_keywords:
                     if keyword in line:
-                        return line
+                        api_line = line
+                        break
+                if api_line:
+                    break
+                    
+            # 如果在备注中找到API信息，提取并返回
+            if api_line:
+                # 提取冒号后面的内容
+                if ':' in api_line:
+                    return api_line.split(':', 1)[1].strip()
+                elif '：' in api_line:
+                    return api_line.split('：', 1)[1].strip()
+                return api_line.strip()
         
+        # 如果没有找到明确的API/服务信息，返回空字符串
         return ""
     
     def _is_core_function(self, node: Dict) -> bool:
@@ -640,30 +728,39 @@ class XMindToExcelConverter:
         
         return any(keyword in title for keyword in main_flow_keywords)
     
-    def _set_column_widths(self, ws, total_rows: int):
-        """设置Excel列宽"""
-        column_widths = {
-            1: 30,  # 节点1
-            2: 30,  # 节点2
-            3: 30,  # 节点3
-            4: 30,  # 节点4
-            5: 30,  # 节点5
-            6: 30,  # 节点6
-            7: 30,  # 节点7
-            8: 30,  # 节点8
-            9: 30,  # 节点9
-            10: 30, # 节点10
-            6: 20,  # 端/API/服务
-            7: 15,  # 冒烟结果
-            8: 20,  # 研发对应负责人
-            9: 20,  # showcase问题
-            10: 15, # 是否核心功能
-            11: 15  # 是否影响主流程
+    def _set_column_widths(self, ws, total_rows: int, max_used_level: int):
+        """
+        设置Excel列宽
+        
+        Args:
+            ws: 工作表对象
+            total_rows: 总行数
+            max_used_level: 实际使用的最大节点层级
+        """
+        # 动态计算列数：节点列 + 业务列(6列)
+        total_columns = max_used_level + 6
+        
+        # 设置节点列宽度
+        for col in range(1, max_used_level + 1):
+            ws.column_dimensions[get_column_letter(col)].width = 30  # 所有节点列宽度为30
+        
+        # 设置业务列宽度
+        business_column_widths = {
+            1: 20,  # 端/API/服务
+            2: 15,  # 冒烟结果
+            3: 20,  # 研发对应负责人
+            4: 20,  # showcase问题
+            5: 15,  # 是否核心功能
+            6: 15   # 是否影响主流程
         }
         
-        for col, width in column_widths.items():
+        # 应用业务列宽度
+        for offset, width in business_column_widths.items():
+            col = max_used_level + offset
             ws.column_dimensions[get_column_letter(col)].width = width
-    
+            
+        logger.info(f"设置了 {total_columns} 列的宽度 (节点列: {max_used_level}, 业务列: 6)")
+
     def _create_summary_sheet(self, ws, hierarchy_data: List[Dict]):
         """创建汇总信息工作表"""
         # 设置标题
@@ -695,16 +792,29 @@ class XMindToExcelConverter:
         ws.column_dimensions['A'].width = 25
         ws.column_dimensions['B'].width = 50
 
-    def _write_empty_row(self, ws, row):
+    def _write_empty_row(self, ws, row, max_used_level=None):
         """
         写入一个空白行，用于模块分隔
         
         Args:
             ws: 工作表
             row: 行号
+            max_used_level: 实际使用的最大节点层级，如果为None则使用self.max_levels
         """
-        # 获取当前表格的列数（11列，移除了执行时间列）
-        for col in range(1, 12):
+        if max_used_level is None:
+            # 尝试从表头推断列数
+            max_col = 0
+            for col in range(1, self.max_levels + 7):  # 最大可能的列数
+                if ws.cell(row=1, column=col).value is not None:
+                    max_col = col
+            
+            # 如果无法推断，使用默认值
+            total_columns = max_col if max_col > 0 else self.max_levels + 6
+        else:
+            total_columns = max_used_level + 6  # 节点列 + 业务列(6列)
+        
+        # 写入空白行
+        for col in range(1, total_columns + 1):
             cell = ws.cell(row=row, column=col, value="")
             # 设置边框
             cell.border = Border(
@@ -727,18 +837,26 @@ class XMindToExcelConverter:
         """
         logger.info(f"检查空白行，范围：{start_row} - {end_row}")
         
+        # 确定总列数
+        max_col = 0
+        for col in range(1, self.max_levels + 7):  # 最大可能的列数
+            if ws.cell(row=1, column=col).value is not None:
+                max_col = col
+        
+        total_columns = max_col if max_col > 0 else self.max_levels + 6
+        
         # 特别检查第2行（表头后的第一行数据）
         if start_row == 2:
-            # 判断是否为空行的标准：前5列都为空
+            # 判断是否为空行的标准：前几列都为空
             is_empty = True
-            for col in range(1, 6):
+            for col in range(1, min(6, total_columns + 1)):  # 检查前5列或所有列
                 if ws.cell(row=2, column=col).value is not None:
                     is_empty = False
                     break
                     
             if is_empty:
                 logger.warning("检测到第2行是空白行，清除该行...")
-                for col in range(1, 12):  # 清除所有单元格内容和格式
+                for col in range(1, total_columns + 1):  # 清除所有单元格内容和格式
                     ws.cell(row=2, column=col).value = None
                     ws.cell(row=2, column=col).fill = None
                     ws.cell(row=2, column=col).border = None
@@ -753,6 +871,14 @@ class XMindToExcelConverter:
         """
         logger.info("检查并删除所有空白行")
         
+        # 确定总列数
+        max_col = 0
+        for col in range(1, self.max_levels + 7):  # 最大可能的列数
+            if ws.cell(row=1, column=col).value is not None:
+                max_col = col
+        
+        total_columns = max_col if max_col > 0 else self.max_levels + 6
+        
         # 获取工作表的最大行数
         max_row = ws.max_row
         empty_rows = []
@@ -760,7 +886,7 @@ class XMindToExcelConverter:
         # 修复：特别检查第一个数据行（第2行）
         # 如果第一个数据行是空的，这可能是导致顶部空白行的主要原因
         first_data_row_empty = True
-        for col in range(1, 12):
+        for col in range(1, total_columns + 1):
             if ws.cell(row=start_row, column=col).value is not None:
                 first_data_row_empty = False
                 break
@@ -772,7 +898,7 @@ class XMindToExcelConverter:
         # 从起始行开始检查每一行
         for row in range(start_row, max_row + 1):
             is_empty = True
-            for col in range(1, 12):  # 检查所有列
+            for col in range(1, total_columns + 1):  # 检查所有列
                 if ws.cell(row=row, column=col).value is not None:
                     is_empty = False
                     break
@@ -792,7 +918,7 @@ class XMindToExcelConverter:
         remaining_empty_rows = []
         for row in range(start_row, ws.max_row + 1):
             is_empty = True
-            for col in range(1, 12):
+            for col in range(1, total_columns + 1):
                 if ws.cell(row=row, column=col).value is not None:
                     is_empty = False
                     break

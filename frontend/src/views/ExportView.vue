@@ -261,11 +261,8 @@ const activeTab = ref("table");
 const showDetailDialog = ref(false);
 const selectedTestCase = ref<any | null>(null);
 
-// API基础URL
-const API_BASE_URL = ref("http://localhost:8000");
-
-// 检测是否在Electron环境中运行
-const isElectron = ref(false);
+// API基础URL - 在开发环境使用相对路径，生产环境使用绝对路径
+const API_BASE_URL = ref(import.meta.env.DEV ? "" : "http://localhost:8000");
 
 // 格式化后的JSON字符串
 const formattedJson = computed(() => {
@@ -291,19 +288,6 @@ const testCasesTableData = computed(() => {
 });
 
 onMounted(async () => {
-  // 检查是否在Electron环境中
-  isElectron.value = window.electronAPI !== undefined;
-  
-  // 如果在Electron环境中，从主进程获取API URL
-  if (isElectron.value && window.electronAPI) {
-    try {
-      API_BASE_URL.value = await window.electronAPI.getApiBaseUrl();
-      console.log('在Electron环境中运行，API基础URL:', API_BASE_URL.value);
-    } catch (error) {
-      console.error('获取API基础URL失败:', error);
-    }
-  }
-
   // 从sessionStorage获取分析数据
   try {
     const dataStr = sessionStorage.getItem("analysisData");

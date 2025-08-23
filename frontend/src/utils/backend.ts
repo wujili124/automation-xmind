@@ -3,36 +3,25 @@
  */
 import axios from 'axios'
 
-// 默认API基础URL
-let API_BASE_URL = 'http://localhost:8000'
-
-// 是否在Electron环境
-const isElectron = !!window.electronAPI
+// API基础URL - 在开发环境使用相对路径，生产环境使用绝对路径
+const API_BASE_URL = import.meta.env.DEV ? '' : 'http://localhost:8000'
 
 /**
  * 初始化后端连接
- * 获取API基础URL并检查连接状态
+ * 检查连接状态
  */
 export async function initializeBackend() {
-  if (!isElectron) return { isElectron: false, apiUrl: API_BASE_URL }
-  
   try {
-    // 获取API基础URL
-    API_BASE_URL = await window.electronAPI!.getApiBaseUrl()
-    console.log('获取到API基础URL:', API_BASE_URL)
-    
     // 检查后端状态
     const status = await checkBackendStatus()
     
     return {
-      isElectron: true,
       apiUrl: API_BASE_URL,
       status
     }
   } catch (error) {
     console.error('初始化后端连接失败:', error)
     return { 
-      isElectron: true, 
       apiUrl: API_BASE_URL,
       status: {
         status: 'error' as const,
@@ -46,31 +35,13 @@ export async function initializeBackend() {
  * 检查后端连接状态
  */
 export async function checkBackendStatus(): Promise<BackendStatus> {
-  if (!isElectron) {
-    // 在浏览器环境中，直接尝试连接API
-    try {
-      await axios.get(`${API_BASE_URL}/health`, { timeout: 3000 })
-      return { status: 'online' }
-    } catch (error) {
-      return { 
-        status: 'offline',
-        error: '无法连接到后端API'
-      }
-    }
-  }
-  
-  // 在Electron环境中，使用IPC通信
   try {
-    // 获取最新的API URL
-    API_BASE_URL = await window.electronAPI!.getApiBaseUrl()
-    
-    // 检查连接
     await axios.get(`${API_BASE_URL}/health`, { timeout: 3000 })
     return { status: 'online' }
   } catch (error) {
-    return {
-      status: 'error',
-      error: '检查后端状态失败'
+    return { 
+      status: 'offline',
+      error: '无法连接到后端API'
     }
   }
 }

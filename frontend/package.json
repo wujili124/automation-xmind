@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "main": "electron.cjs",
   "scripts": {
     "dev": "concurrently \"npm run backend\" \"npm run frontend\" --names \"🐍Backend,🌐Frontend\" --prefix-colors \"bgBlue.bold,bgGreen.bold\" --kill-others-on-fail",
     "frontend": "vite",
@@ -15,28 +14,14 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
-    "lint": "eslint . --fix",
-    "electron:dev": "concurrently \"vite\" \"electron electron.cjs\"",
-    "electron:build": "vite build && electron-builder",
-    "electron:build:win": "vite build && electron-builder --win",
-    "electron:build:mac": "vite build && electron-builder --mac",
-    "electron:build:linux": "vite build && electron-builder --linux",
-    "prepare:python": "node scripts/prepare_python.cjs",
-    "build:python:exe": "node scripts/build_python_executable.cjs",
-    "build:complete": "npm run prepare:python && npm run build && electron-builder",
-    "configure:platform": "node scripts/configure-platform.cjs",
-    "configure:mac": "node scripts/macos-config.cjs",
-    "configure:win": "node scripts/windows-config.cjs",
-    "build:mac": "npm run configure:mac && npm run prepare:python && npm run build && electron-builder --mac",
-    "build:win": "npm run configure:win && npm run prepare:python && npm run build && electron-builder --win",
-    "prepare:build": "node scripts/prepare-build.cjs",
-    "build:all": "npm run prepare:build && npm run build:complete"
+    "lint": "eslint . --fix"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "axios": "^1.10.0",
     "element-plus": "^2.10.2",
-    "jszip": "^3.10.1",
+    "unplugin-auto-import": "^20.0.0",
+    "unplugin-vue-components": "^29.0.0",
     "vue": "^3.5.17",
     "vue-router": "^4.5.1",
     "xlsx": "^0.18.5"
@@ -48,73 +33,12 @@
     "@vue/eslint-config-typescript": "^14.5.1",
     "@vue/tsconfig": "^0.7.0",
     "concurrently": "^9.2.0",
-    "electron": "^30.0.0",
-    "electron-builder": "^24.13.0",
     "eslint": "^9.29.0",
     "eslint-plugin-vue": "~10.2.0",
-    "jiti": "^2.4.2",
     "npm-run-all2": "^8.0.4",
     "typescript": "~5.8.0",
     "vite": "^7.0.0",
     "vite-plugin-vue-devtools": "^7.7.7",
     "vue-tsc": "^2.2.10"
-  },
-  "build": {
-    "appId": "com.xmind.automation",
-    "productName": "XMind冒烟测试用例导出工具",
-    "directories": {
-      "output": "dist_electron"
-    },
-    "files": [
-      "dist/**/*",
-      "electron.cjs",
-      "preload.cjs",
-      "scripts/**/*",
-      "index.html"
-    ],
-    "extraResources": [
-      {
-        "from": "../backend",
-        "to": "backend",
-        "filter": [
-          "**/*",
-          "!**/__pycache__/**",
-          "!**/.pytest_cache/**",
-          "!**/python_env/miniconda/{pkgs,shell,conda-meta,include}/**/*"
-        ]
-      },
-      {
-        "from": "scripts",
-        "to": "scripts"
-      }
-    ],
-    "asar": true,
-    "asarUnpack": [
-      "dist/**/*",
-      "scripts/**/*"
-    ],
-    "win": {
-      "target": [
-        "nsis"
-      ]
-    },
-    "mac": {
-      "target": [
-        "dir"
-      ],
-      "icon": "src/assets/app-logo.png",
-      "category": "public.app-category.developer-tools",
-      "darkModeSupport": true,
-      "hardenedRuntime": true,
-      "gatekeeperAssess": false,
-      "entitlements": "/Users/tal/Desktop/project/automation-xmind/frontend/scripts/entitlements.mac.plist",
-      "entitlementsInherit": "/Users/tal/Desktop/project/automation-xmind/frontend/scripts/entitlements.mac.plist"
-    },
-    "linux": {
-      "target": [
-        "AppImage"
-      ]
-    },
-    "publish": null
   }
 }

@@ -23,17 +23,6 @@ interface BackendStatus {
   checked?: boolean
 }
 
-// Electron API 类型定义
-interface ElectronAPI {
-  getApiBaseUrl: () => Promise<string>
-  checkBackendStatus: () => Promise<BackendStatus>
-}
-
-// 扩展Window接口，添加electronAPI属性
-interface Window {
-  electronAPI?: ElectronAPI
-}
-
 // 解决VLS相关错误的声明
 declare namespace __VLS {
   interface GlobalComponents {}
